@@ -159,3 +159,4 @@ class BTRoam:
     async def tick(self):
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
+
