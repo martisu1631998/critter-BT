@@ -93,7 +93,7 @@ class Turn:
     SELECTING = 0
     TURNING = 1
 
-    def __init__(self, a_agent):
+    def __init__(self, a_agent, degrees = None):
         self.a_agent = a_agent
         self.rc_sensor = a_agent.rc_sensor
         self.i_state = a_agent.i_state
@@ -102,12 +102,16 @@ class Turn:
         self.accumulated_rotation = 0
         self.direction = self.RIGHT
         self.state = self.SELECTING
+        self.degrees = degrees
 
     async def run(self):
         try:
             while True:
                 if self.state == self.SELECTING:
-                    self.rotation_amount = random.randint(10, 90)
+                    if self.degrees == None:
+                        self.rotation_amount = random.randint(10, 90)
+                    else:
+                        self.rotation_amount = self.degrees
                     print("Degrees: " + str(self.rotation_amount))
                     self.direction = random.choice([self.LEFT, self.RIGHT])
                     if self.direction == self.RIGHT:
