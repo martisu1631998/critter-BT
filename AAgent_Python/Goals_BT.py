@@ -149,3 +149,57 @@ class Turn:
             await self.a_agent.send_message("action", "nt")
 
 
+class ApproachObject:
+    APPROACHING = 0
+    REACHED = 1
+    
+    def __init__(self, a_agent):
+        self.a_agent = a_agent
+        self.rc_sensor = a_agent.rc_sensor
+        self.i_state = a_agent.i_state
+        self.target_pos = None
+        self.state = self.APPROACHING
+        
+    def initialise_position(self, object):
+        self.object = object['tag']
+        self.distance = object['distance']
+        self.state = self.APPROACHING
+
+    async def run(self):
+        try:
+            while True:
+                if self.state == self.APPROACHING:
+                    print("Calculating distance...")
+                    current_distance = calculate_distance(self.i_state.position, self.target_pos)
+                    if self.distance < 0.1: # Stop when we are 10 cm away from the object
+                        await self.a_agent.send_message("action", "stop")
+                        self.state = self.REACHED
+                        print("Object reached")
+                        return True
+                    else:
+                        # Move towards the object
+                        await self.a_agent.send_message("action", "mf")
+                        print("Moving towards the object...")
+                    await asyncio.sleep(0)
+                
+                elif self.state == self.REACHED:
+                    if self.object == "Flower":
+                        print(f"Reached {self.object}!")
+                        await asyncio.sleep(5)  # Stay near the flower for 5 seconds
+                        self.i_state.isHungry = False  # Satiated
+                        print("Hungry flag turned off.")
+                        await self.a_agent.send_message("action", "stop")
+                        await asyncio.sleep(15)  # Wait 15 seconds before being hungry again
+                        self.i_state.isHungry = True  # Hungry again
+                        print("Hungry flag turned on.")
+                    
+                    elif self.object == "Astronaut":
+                        print(f"Reached {self.object}!")
+                
+                else:
+                    print("Unknown state: " + str(self.state))
+                    return False
+        except asyncio.CancelledError:
+            print("***** TASK Forward CANCELLED")
+            await self.a_agent.send_message("action", "stop")
+            self.state = self.STOPPED

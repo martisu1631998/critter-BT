@@ -15,6 +15,7 @@ class InternalState:
             isRotatingLeft: <bool>
             movingForwards: <bool>
             movingBackwards: <bool>
+            isHungry: <bool>
             speed: <float> Speed of the agent
             position: <dict { "x": <float>, "y": <float>, "z": <float> } Position using world coordinates
             rotation: <dict { "x": <float>, "y": <float>, "z": <float> } Rotation y - Yaw, x - Pitch, z - Roll
@@ -24,6 +25,7 @@ class InternalState:
         self.isRotatingLeft = False
         self.movingForwards = False
         self.movingBackwards = False
+        self.isHungry = True
         self.speed = 0.0
         self.position = {"x": 0, "y": 0, "z": 0}
         self.rotation = {"x": 0, "y": 0, "z": 0}
@@ -75,7 +77,8 @@ class AAgent:
         self.goals = {
             "DoNothing": Goals_BT.DoNothing(self),
             "ForwardDist": Goals_BT.ForwardDist(self, -1, 5, 10),
-            "Turn": Goals_BT.Turn(self)
+            "Turn": Goals_BT.Turn(self),
+            "ApproachObject": Goals_BT.ApproachObject(self)
         }
         # Active goal
         self.currentGoal = None

@@ -98,6 +98,7 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
         print("Initializing BN_DetectFlower")
         super(BN_DetectFlower, self).__init__("BN_DetectFlower")
         self.my_agent = aagent
+        self.i_state = aagent.i_state
 
     def initialise(self):
         pass
@@ -107,7 +108,13 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If it is a flower
-                    # print("Flower detected!")
+                    print("Flower detected!")
+                    if self.i_state.isHungry == True:
+                        # Calls the goal to approach the flower and stays there for 5 seconds until is statiated
+                        # self.my_goal = asyncio.create_task(Goals_BT.ApproachObject(self.my_agent, value).run())
+                        self.my_agent.goals["ApproachObject"].initialise_position(value)
+                        self.my_goal = asyncio.create_task(self.my_agent.goals["ApproachObject"].run())
+                        self.i_state.isHungry = False
                     print("BN_DetectFlower completed with SUCCESS")
                     return pt.common.Status.SUCCESS
         # print("No flower...")
@@ -136,7 +143,7 @@ class BTRoam:
 
         # VERSION 3 (with DetectFlower)
         detection = pt.composites.Sequence(name="DetectFlower", memory=True)
-        detection.add_children([BN_DetectFlower(aagent), BN_DoNothing(aagent)])
+        detection.add_children([BN_DetectFlower(aagent)])
 
         roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
         roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
