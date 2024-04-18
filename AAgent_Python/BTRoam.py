@@ -5,6 +5,7 @@ import py_trees as pt
 from py_trees import common
 import Goals_BT
 import Sensors
+import time
 
  
 class BN_DoNothing(pt.behaviour.Behaviour):
@@ -75,14 +76,14 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, -1, 360).run())
 
     def update(self):
-        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        print(sensor_obj_info)
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]        
         if not self.my_goal.done():
             return pt.common.Status.RUNNING
         else:
             res = self.my_goal.result()
             if res:
                 print("BN_Turn completed with SUCCESS")
+                print(self.my_agent.isHungry)
                 return pt.common.Status.SUCCESS
             else:
                 print("BN_Turn completed with FAILURE")
@@ -125,6 +126,7 @@ class BTRoam:
         # py_trees.logging.level = py_trees.logging.Level.DEBUG
 
         self.aagent = aagent
+        self.initTime = time.time()
 
         # VERSION 1
         self.root = pt.composites.Sequence(name="Sequence", memory=True)
@@ -159,5 +161,12 @@ class BTRoam:
         self.set_invalid_state(self.root)
 
     async def tick(self):
+        # Control the time passed until the agent is hungry
+        self.aagent.timecount = time.time() - self.initTime
+        if self.aagent.timecount < 15:
+            self.aagent.isHungry = False
+        else:
+            self.aagent.isHungry = True
+
         self.behaviour_tree.tick()
         await asyncio.sleep(0)

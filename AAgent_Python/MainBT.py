@@ -59,8 +59,8 @@ class GlobalBT:
 
     async def tick(self):
         # Control the time passed until the agent is hungry
-        self.aagent.timer = time.time() - self.initTime
-        if self.aagent.time < 15:
+        self.aagent.timecount = time.time() - self.initTime
+        if self.aagent.timecount < 15:
             self.aagent.isHungry = False
         else:
             self.aagent.isHungry = True
