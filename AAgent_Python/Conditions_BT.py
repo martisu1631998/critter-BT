@@ -1,5 +1,5 @@
-import py_trees as pt 
-from py_trees import common
+import py_trees as pt  # type: ignore
+from py_trees import common # type: ignore
 import Sensors
 
 '''
