@@ -112,26 +112,10 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If it is a flower
                     print("Flower detected!", value)
-                    self.i_state.isHungry = True
-                    if self.i_state.isHungry == True:
-                        print("Calling the goal...")
-                        # Calls the goal to approach the flower
-                        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, value["distance"], -1, 10).run())
-                        print("Goal:", self.my_goal)
-                        # Wait for 5 seconds, and it will be satiated
-                        # await asyncio.sleep(5)
-                        # print("1...")
-                        # time.sleep(1)
-                        # print("2...")
-                        # time.sleep(1)
-                        # print("3...")
-                        # time.sleep(1)
-                        # print("4...")
-                        # time.sleep(1)
-                        # print("5...")
-                        # time.sleep(1)
-                        self.i_state.isHungry = False
-                        # After is satiated, go somewhere else randomly, and after 15 seconds, it will be hungry again
+                    # Calls the goal to approach the flower
+                    self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, value["distance"], -1, 10).run())
+                    print("Goal finished:", self.my_goal)
+                    # After is satiated, go somewhere else randomly, and after 15 seconds, it will be hungry again
                     print("BN_DetectFlower completed with SUCCESS")
                     return pt.common.Status.SUCCESS
         # print("No flower...")
@@ -139,47 +123,8 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
         return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
-        if new_status == pt.common.Status.SUCCESS:
-            self.logger.debug("Terminate BN_DetectFlower")
-            print("Terminating BN_DetectFlower")
-            # await asyncio.sleep(5)
-            # self.i_state.isHungry=False
-            print("Hungry =", self.i_state.isHungry)
-            # After the critter is satiated, it will stop the current goal and go somewhere else.
-            self.my_goal.cancel()
-            # await asyncio.sleep(15)
-            # print("1...")
-            # time.sleep(1)
-            # print("2...")
-            # time.sleep(1)
-            # print("3...")
-            # time.sleep(1)
-            # print("4...")
-            # time.sleep(1)
-            # print("5...")
-            # time.sleep(1)
-            # print("6...")
-            # time.sleep(1)
-            # print("7...")
-            # time.sleep(1)
-            # print("8...")
-            # time.sleep(1)
-            # print("9...")
-            # time.sleep(1)
-            # print("10...")
-            # time.sleep(1)
-            # print("11...")
-            # time.sleep(1)
-            # print("12...")
-            # time.sleep(1)
-            # print("13...")
-            # time.sleep(1)
-            # print("14...")
-            # time.sleep(1)
-            # print("15...")
-            # time.sleep(1)
-            self.i_state.isHungry = True
-            print("Hungry =", self.i_state.isHungry)
+        self.logger.debug("Terminate BN_DetectFlower")
+        self.my_goal.cancel()
             
 
 
