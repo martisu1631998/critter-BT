@@ -31,11 +31,7 @@ class InternalState:
         # Our variables
         self.timer = 0
         self.isHungry = False
-        self.obstacleInfo = [0,0,0]
-        '''
-        0: No obstacles             1: Obstacle  on the right
-        2: Obstacle on the left     4: Obstacle on the center
-        '''
+        self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
 
 
     def set_internal_state(self, i_state_dict):
@@ -96,8 +92,8 @@ class AAgent:
 
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
-            "BTRoam": BTRoam.BTRoam(self)
-            "BTCritter": BtCritter.BTRoamAdvanced(self)
+            "BTRoam": BTRoam.BTRoam(self),
+            "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
         }
 
         # Active behaviour tree
