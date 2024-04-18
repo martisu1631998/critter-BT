@@ -18,7 +18,7 @@ class ManageObs(pt.behaviour.Behaviour):
     def __init__(self, aagent):
         self.my_goal = None
         print("Initializing ManageObs")
-        super(ManageObs, self).__init__("Normal")
+        super(ManageObs, self).__init__("ManageObs")
         self.logger.debug("Initializing ManageObs")
         self.my_agent = aagent
         
@@ -47,7 +47,6 @@ class ManageObs(pt.behaviour.Behaviour):
             self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
                                                              direction=1,
                                                              rotation_amount=15))
-            
         
     def update(self):
         if not self.my_goal.done():
@@ -65,3 +64,40 @@ class ManageObs(pt.behaviour.Behaviour):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate BN_ManageObstacle")
         self.my_goal.cancel()
+
+
+# class TurnToFlower()
+
+# class GoToFlower()
+
+# class Eating()
+
+class TurnToAstronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing TurnToAstronaut")
+        super(ManageObs, self).__init__("Normal")
+        self.logger.debug("TurnToAstronaut")
+        self.my_agent = aagent
+
+    def initialise(self):
+        direction = self.my_agent.i_state.astronautDirection
+        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, *direction).run())
+
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("BN_ManageObstacle completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("BN_ManageObstacle completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate TurnToAstronaut")
+        self.my_goal.cancel()
+
