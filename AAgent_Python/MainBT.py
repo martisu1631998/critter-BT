@@ -6,7 +6,7 @@ from py_trees import common
 from Conditions import *
 import Goals_BT
 import Sensors
-import Base_Actions
+from Base_Actions import *
 
 
 '''
@@ -47,8 +47,8 @@ class GlobalBT:
         search.add_children([Is_Following(aagent), Searching(aagent)])
 
         # Roam around
-        search = pt.composites.Sequence("Search astronaut", memory=False)
-        search.add_children([Is_Following(aagent), Searching(aagent)])
+        roam = pt.composites.Parallel("Roam aroud", policy=pt.common.ParallelPolicy.SuccessOnAll())
+        roam.add_children([BN_Forward(aagent), BN_Turn(aagent)])
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
