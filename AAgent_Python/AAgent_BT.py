@@ -31,7 +31,7 @@ class InternalState:
         # Our variables
         self.timer = 0
         self.isHungry = False
-        self.obstacleInfo = 0
+        self.obstacleInfo = [0,0,0]
         '''
         0: No obstacles             1: Obstacle  on the right
         2: Obstacle on the left     4: Obstacle on the center

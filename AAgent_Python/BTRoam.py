@@ -104,10 +104,12 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        # Only trigger if one of the 3 central rays hits
-        for i in [4, 5, 6]:
-            if sensor_obj_info[i]:
-                if sensor_obj_info[i]["tag"] == "Flower":
+        print(type(sensor_obj_info))
+        print(sensor_obj_info)
+        for index, value in enumerate(sensor_obj_info):
+            if value:  # there is a hit with an object
+                if value["tag"] == "Flower":  # If it is a flower
+                    # print("Flower detected!")
                     print("BN_DetectFlower completed with SUCCESS")
                     return pt.common.Status.SUCCESS
         # print("No flower...")
