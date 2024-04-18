@@ -28,7 +28,7 @@ class BN_DetectObstacle(pt.behaviour.Behaviour):
                     print("BN_DetectObstacle completed with SUCCESS")
                     return pt.common.Status.SUCCESS
                 if value["tag"] == "Flower":
-                    if not hungry:
+                    if not self.my_agent.:
                         return pt.common.Status.SUCCESS
         return pt.common.Status.FAILURE
 
