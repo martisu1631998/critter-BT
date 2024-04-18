@@ -25,20 +25,23 @@ class Approach_Flower(pt.behaviour.Behaviour):
         left = [0,1,2,3]
         middle = [4,5,6]
         right = [7,8,9,10,11]
-        while self.rays not in middle:
-            sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-            for index, value in enumerate(sensor_obj_info):
-                if value:
-                    if value["tag"] == "Flower":
-                        # Turn if the flower is not in front of the critter
-                        if index in left:
-                            self.my_goal = asyncio.create_task(Turn(self.my_agent, direction=1, rotation_amount=45).run())
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+        for index, value in enumerate(sensor_obj_info):
+            if value:
+                if value["tag"] == "Flower":
+                    print("Turning to the flower....")
+                    # Turn if the flower is not in front of the critter
+                    if index in left:
+                        self.my_goal = asyncio.create_task(Turn(self.my_agent, direction=1, rotation_amount=45).run())
+                        print("Successfully turned")
                                 
-                        if index in right:
-                            self.my_goal = asyncio.create_task(Turn(self.my_agent, direction=-1, rotation_amount=-45).run())
-                        
-                        self.rays = index
-                        print(self.rays)
+                    if index in right:
+                        self.my_goal = asyncio.create_task(Turn(self.my_agent, direction=-1, rotation_amount=-45).run())
+                        print("Successfully turned")
+                    
+                    self.rays = index    
+                    
+                    break
                           
         # When the flower is in front of the critter, move towards it.
         if self.rays in middle:
