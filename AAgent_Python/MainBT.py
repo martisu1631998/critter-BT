@@ -3,6 +3,7 @@ import random
 import time
 import py_trees as pt 
 from py_trees import common
+import Conditions_BT
 import Goals_BT
 import Sensors
 
@@ -21,16 +22,16 @@ class GlobalBT:
         # Create sub-trees
 
         # Avoid critters
-        avoid = pt.composites.Sequence(name="Avoid critter", memory=True)
-        avoid.add_children([Is_Critter(aagent), Avoiding(aagent)])
+        critter = pt.composites.Sequence(name="Avoid critter", memory=True)
+        critter.add_children([Is_Critter(aagent), Avoid_Critter(aagent)])
 
         # Eat flowers
         eat = pt.composites.Sequence("Eat", memory=True)
         eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
 
         # Avoid obstacles
-        follow = pt.composites.Sequence("Follow astronaut", memory=True)
-        follow.add_children([Is_Astronaut(aagent), Following(aagent)])
+        obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
+        follow.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
 
         # Follow astronaut
         follow = pt.composites.Sequence("Follow astronaut", memory=True)
@@ -42,7 +43,7 @@ class GlobalBT:
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([avoid(aagent), eat(aagent), follow(aagent), search(aagent), roam(aagent)])
+        self.root.add_children([critter(aagent), eat(aagent), obstacle(aagent), follow(aagent), search(aagent), roam(aagent)])
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
@@ -57,10 +58,15 @@ class GlobalBT:
         self.set_invalid_state(self.root)
 
     async def tick(self):
-        self.timer = time.time() - self.initTime
-        if self.time < 15:
-            self.hungry = False
+        # Control the time passed until the agent is hungry
+        self.aagent.timer = time.time() - self.initTime
+        if self.aagent.time < 15:
+            self.aagent.isHungry = False
         else:
-            self.hungry = True
+            self.aagent.isHungry = True
+
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
+
+
+
