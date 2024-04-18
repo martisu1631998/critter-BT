@@ -104,8 +104,6 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        print(type(sensor_obj_info))
-        print(sensor_obj_info)
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If it is a flower
@@ -161,20 +159,3 @@ class BTRoam:
     async def tick(self):
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
-
-
-'''
-    def update(self):
-        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        print(type(sensor_obj_info))
-        print(sensor_obj_info)
-        for index, value in enumerate(sensor_obj_info):
-            if value:  # there is a hit with an object
-                if value["tag"] == "Flower":  # If it is a flower
-                    # print("Flower detected!")
-                    print("BN_DetectFlower completed with SUCCESS")
-                    return pt.common.Status.SUCCESS
-        # print("No flower...")
-        # print("BN_DetectFlower completed with FAILURE")
-        return pt.common.Status.FAILURE
-'''

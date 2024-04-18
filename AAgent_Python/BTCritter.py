@@ -45,12 +45,12 @@ class BN_DetectObstacle(pt.behaviour.Behaviour):
         for i in [4,5,6]:
             if sensor_obj_info[i]:
                 if sensor_obj_info[i]["tag"] in self.always_avoid:
-                    print("BN_DetectObstacle completed with SUCCESS")
+                    # print("BN_DetectObstacle completed with SUCCESS")
                     # From i in [4,5,6] to i in [0,1,2]
                     self.hits[i-4] = 1
                     detected = True                    
                 elif (sensor_obj_info[i]["tag"] == "Flower") and (not self.my_agent.i_state.isHungry):
-                    print("BN_DetectObstacle completed with SUCCESS")
+                    # print("BN_DetectObstacle completed with SUCCESS")
                     # From i in [4,5,6] to i in [0,1,2]
                     self.hits[i-4] = 1
                     detected = True
@@ -80,10 +80,10 @@ class BN_NoObstacle(pt.behaviour.Behaviour):
         for i in [4,5,6]:
             if sensor_obj_info[i]:
                 if sensor_obj_info[i]["tag"] in self.always_avoid:
-                    print("BN_DetectObstacle completed with SUCCESS")
+                    # print("BN_NoObstacle completed with SUCCESS")
                     return pt.common.Status.FAILURE
                 elif (sensor_obj_info[i]["tag"] == "Flower") and (not self.my_agent.i_state.isHungry):
-                    print("BN_DetectObstacle completed with SUCCESS")
+                    # print("BN_NoObstacle completed with SUCCESS")
                     return pt.common.Status.FAILURE
         self.my_agent.i_state.obstacleInfo = [0,0,0]
         return pt.common.Status.SUCCESS
@@ -102,7 +102,7 @@ class BN_ManageObstacle(pt.behaviour.Behaviour):
     def initialise(self):
         # No immediate obstacle --> do nothing
         if self.my_agent.i_state.obstacleInfo[1] == 0:
-            self.my_goal = asyncio.create_task(Goals_BT.DoNothing(self.my_agent))
+            self.my_goal = asyncio.create_task(Goals_BT.DoNothing(self.my_agent).run())
         # Obstacles on the left --> turn right
         if self.my_agent.i_state.obstacleInfo[0] == 1:
             self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
@@ -153,11 +153,8 @@ class BTRoamAdvanced:
         flower_detection = pt.composites.Sequence(name="DetectFlower", memory=True)
         flower_detection.add_children([BN_DetectFlower(aagent), BN_DoNothing(aagent)])
 
-        roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
-        roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
-
-        no_problem = pt.composites.Selector(name="Selector", memory=False)
-        no_problem.add_children([flower_detection, roaming])
+        # roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
+        # roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
         obstacle = pt.composites.Sequence(name="DetectObstacle", memory=False)
         obstacle.add_children([BN_DetectObstacle(aagent), BN_ManageObstacle(aagent)])
@@ -166,7 +163,7 @@ class BTRoamAdvanced:
         free_way.add_children([BN_NoObstacle(aagent), obstacle])
 
         self.root = pt.composites.Sequence(name="Sequence", memory=False)
-        self.root.add_children([free_way, no_problem])
+        self.root.add_children([free_way, BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
