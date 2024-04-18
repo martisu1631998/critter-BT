@@ -1,5 +1,5 @@
 import sys
-import aiohttp
+import aiohttp # type: ignore
 import asyncio
 import json
 import Sensors
@@ -35,7 +35,10 @@ class InternalState:
         self.isFollowing = False
         self.timecount = 0.0
         self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
-        self.rays = [0,0,0,0,0,0,0,0,0,0,0]
+        self.flowerDirection = 0
+        self.flowerDistance = 0
+        self.astronautDirection = 0
+        self.astronautDistance = 0
 
 
     def set_internal_state(self, i_state_dict):

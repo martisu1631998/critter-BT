@@ -57,6 +57,7 @@ class BN_DetectObstacle(pt.behaviour.Behaviour):
         if detected:
             self.updateObstacleInfo()
             return pt.common.Status.SUCCESS
+        self.my_agent.i_state.obstacleInfo = [0,0,0]
         return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
