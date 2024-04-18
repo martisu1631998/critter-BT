@@ -80,16 +80,34 @@ class Approach_Flower(pt.behaviour.Behaviour):
         self.rays = 0
         self.state = self.STOPPED
         self.distance = None
+        self.i_state = aagent.i_state
         
     def initialise(self):
         pass
         # self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, -1, -1, 10).run())
 
-    # async def update(self):
     def update(self):
         left = [0,1,2,3]
         middle = [4,5,6]
         right = [7,8,9,10,11]
+        
+        if self.state == self.STOPPED:
+            print("Initializing things...")
+            self.direction = self.i_state.flowerDirection[0]
+            self.degree_rotation = self.i_state.flowerDirection[1]
+            self.distance = self.i_state.flowerDistance
+            self.state = self.TURNING
+        
+        elif self.state == self.TURNING:
+            self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree_rotation).run())
+            print("Successfully turned to the flower!")
+            
+        elif self.state == self.MOVING_FORWARD:
+            self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, self.distance, -1, 10).run())     
+            print("Approach_Flower SUCCESS")
+            return pt.common.Status.SUCCESS
+        
+        """"
         
         if self.state == self.STOPPED:
             sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
@@ -123,7 +141,7 @@ class Approach_Flower(pt.behaviour.Behaviour):
             print("Approach_Flower SUCCESS")
             return pt.common.Status.SUCCESS
         
-        """"
+        
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
         for index, value in enumerate(sensor_obj_info):
             if value:
