@@ -17,7 +17,7 @@ class GlobalBT:
     def __init__(self, aagent):
         # Initialize agent atributes
         self.aagent = aagent
-        self.initTime = time.time()        
+        self.initTime = time.time()               
         
         # Create sub-trees
 

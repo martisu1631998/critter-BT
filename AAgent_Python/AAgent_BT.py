@@ -5,7 +5,7 @@ import json
 import Sensors
 import Goals_BT
 import BTRoam
-
+ 
 
 class InternalState:
     """
@@ -28,15 +28,9 @@ class InternalState:
         self.position = {"x": 0, "y": 0, "z": 0}
         self.rotation = {"x": 0, "y": 0, "z": 0}
         # Our variables
-        self.timer = 0
         self.isHungry = False
         self.isFollowing = False
-        self.obstacleInfo = 0
-        '''
-        0: No obstacles             1: Obstacle  on the right
-        2: Obstacle on the left     4: Obstacle on the center
-        '''
-
+        self.timecount = 0.0
 
     def set_internal_state(self, i_state_dict):
         self.isRotatingRight = i_state_dict["isRotatingRight"]
@@ -47,10 +41,9 @@ class InternalState:
         self.position = i_state_dict["position"]
         self.rotation = i_state_dict["rotation"]
         # Our variables
-        self.timer = i_state_dict["timer"]
-        self.isHungry = i_state_dict["hungry"]
-        self.isFollowing = i_state_dict["following"]
-        self.obstacleInfo = i_state_dict["obstacleInfo"]
+        self.isHungry = False
+        self.isFollowing = False
+        self.timecount = 0.0
 
 
 class AAgent:
