@@ -109,12 +109,10 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If it is a flower
                     print("Flower detected!", value)
-                    # if self.i_state.isHungry == True:
+                    if self.i_state.isHungry == True:
+                        print("Calling the goal...")
                         # Calls the goal to approach the flower and stays there for 5 seconds until is statiated
-                        # self.my_goal = asyncio.create_task(Goals_BT.ApproachObject(self.my_agent, value).run())
-                    self.my_agent.goals["ApproachObject"].initialise_position(value)
-                    print("Approaching", value['tag'])
-                    self.my_goal = asyncio.create_task(self.my_agent.goals["ApproachObject"].run())
+                        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, value["distance"], -1, 10).run())
                     self.i_state.isHungry = False
                     print("BN_DetectFlower completed with SUCCESS")
                     return pt.common.Status.SUCCESS

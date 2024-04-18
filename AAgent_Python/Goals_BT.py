@@ -59,6 +59,7 @@ class ForwardDist:
                         self.target_dist = random.randint(self.d_min, self.d_max)
                     else:
                         self.target_dist = self.original_dist
+                        print("Distance to the object:", self.target_dist)
                     # Start moving
                     await self.a_agent.send_message("action", "mf")
                     self.state = self.MOVING

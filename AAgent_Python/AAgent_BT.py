@@ -77,8 +77,7 @@ class AAgent:
         self.goals = {
             "DoNothing": Goals_BT.DoNothing(self),
             "ForwardDist": Goals_BT.ForwardDist(self, -1, 5, 10),
-            "Turn": Goals_BT.Turn(self),
-            "ApproachObject": Goals_BT.ApproachObject(self)
+            "Turn": Goals_BT.Turn(self)
         }
         # Active goal
         self.currentGoal = None
