@@ -12,7 +12,7 @@ import time
 class BN_DetectObstacle(pt.behaviour.Behaviour):
     def __init__(self, aagent):
         self.my_goal = None
-        print("Initializing BN_DetectFlower")
+        print("Initializing BN_DetectObstacle")
         super(BN_DetectObstacle, self).__init__("BN_DetectObstacle")
         self.my_agent = aagent
         self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine"]
