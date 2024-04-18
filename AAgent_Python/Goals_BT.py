@@ -68,6 +68,7 @@ class ForwardDist:
                 elif self.state == self.MOVING:
                     # If we are moving, check if we already have covered the required distance
                     current_dist = calculate_distance(self.starting_pos, self.i_state.position)
+                    print("Current distance:", current_dist)
                     if current_dist >= self.target_dist:
                         await self.a_agent.send_message("action", "stop")
                         self.state = self.STOPPED
