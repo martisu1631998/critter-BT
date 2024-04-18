@@ -48,7 +48,9 @@ class BN_DetectObstacle(pt.behaviour.Behaviour):
                     # print("BN_DetectObstacle completed with SUCCESS")
                     # From i in [4,5,6] to i in [0,1,2]
                     self.hits[i-4] = 1
-                    detected = True                    
+                    detected = True
+                    if sensor_obj_info[i]["tag"] == "AAgentCritterMantaRay":
+                        print("AAAAH! A critter!")                    
                 elif (sensor_obj_info[i]["tag"] == "Flower") and (not self.my_agent.i_state.isHungry):
                     # print("BN_DetectObstacle completed with SUCCESS")
                     # From i in [4,5,6] to i in [0,1,2]
@@ -77,7 +79,8 @@ class BN_ManageObstacle(pt.behaviour.Behaviour):
         # No immediate obstacle --> do nothing
         if self.my_agent.i_state.obstacleInfo[1] == 0:
             print("Ignore Obstacle", self.my_agent.i_state.obstacleInfo)
-            self.my_goal = asyncio.create_task(Goals_BT.DoNothing(self.my_agent).run())
+            self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, -1, 1, 5).run())
+        
         # Obstacles on the left --> turn right
         elif self.my_agent.i_state.obstacleInfo[0] == 1:
             print("Obstacle on the left", self.my_agent.i_state.obstacleInfo)
@@ -90,6 +93,13 @@ class BN_ManageObstacle(pt.behaviour.Behaviour):
             self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
                                                              direction=-1,
                                                              rotation_amount=15).run())
+        
+        elif self.my_agent.i_state.obstacleInfo[1] == 1:
+            print("Obstacle on the middle", self.my_agents.i_state.obstacleInfo)
+            self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
+                                                             direction=1,
+                                                             rotation_amount=15))
+            
         
     def update(self):
         if not self.my_goal.done():

@@ -73,7 +73,7 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         self.my_agent = aagent
 
     def initialise(self):
-        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, -1, 360).run())
+        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent).run())
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]        
