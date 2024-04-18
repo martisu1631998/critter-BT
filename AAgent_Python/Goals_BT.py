@@ -85,6 +85,7 @@ class ForwardDist:
 
 class Turn:
     """
+    Turns right or left the specified amount of degrees. If none are specified:
     Repeats the action of turning a random number of degrees in a random
     direction (right or left)
     """
@@ -94,23 +95,27 @@ class Turn:
     SELECTING = 0
     TURNING = 1
 
-    def __init__(self, a_agent):
+    def __init__(self, a_agent, direction=None, rotation_amount=None):
         self.a_agent = a_agent
         self.rc_sensor = a_agent.rc_sensor
         self.i_state = a_agent.i_state
-        self.rotation_amount = 45
+        self.rotation_amount = rotation_amount
         self.prev_rotation = 0
         self.accumulated_rotation = 0
-        self.direction = self.RIGHT
+        self.direction = direction
         self.state = self.SELECTING
 
     async def run(self):
         try:
             while True:
                 if self.state == self.SELECTING:
-                    self.rotation_amount = random.randint(10, 90)
+                    # Only choose a random value if none was specified
+                    if self.rotation_amount is None:
+                        self.rotation_amount = random.randint(10, 90)
                     print("Degrees: " + str(self.rotation_amount))
-                    self.direction = random.choice([self.LEFT, self.RIGHT])
+                    # Only choose a random value if none was specified
+                    if self.direction is None:
+                        self.direction = random.choice([self.LEFT, self.RIGHT])
                     if self.direction == self.RIGHT:
                         await self.a_agent.send_message("action", "tr")
                         # print("Direction: RIGHT")
@@ -148,3 +153,57 @@ class Turn:
         except asyncio.CancelledError:
             print("***** TASK Turn CANCELLED")
             await self.a_agent.send_message("action", "nt")
+
+'''
+class AvoidObs:
+    """
+        Avoids obstacle by entering a loop where it turns a bit
+    """
+    STOPPED = 0
+    MOVING = 1
+    END = 2
+
+    def __init__(self, a_agent, dist, d_min, d_max):
+        self.a_agent = a_agent
+        self.rc_sensor = a_agent.rc_sensor
+        self.i_state = a_agent.i_state
+        self.original_dist = dist
+        self.target_dist = dist
+        self.d_min = d_min
+        self.d_max = d_max
+        self.starting_pos = a_agent.i_state.position
+        self.state = self.STOPPED
+
+    async def run(self):
+        try:
+            while True:
+                if self.state == self.STOPPED:
+                    # starting position before moving
+                    self.starting_pos = self.a_agent.i_state.position
+                    # Before start moving, calculate the distance we want to move
+                    if self.original_dist < 0:
+                        self.target_dist = random.randint(self.d_min, self.d_max)
+                    else:
+                        self.target_dist = self.original_dist
+                    # Start moving
+                    await self.a_agent.send_message("action", "mf")
+                    self.state = self.MOVING
+                    # print("TARGET DISTANCE: " + str(self.target_dist))
+                    # print("MOVING ")
+                elif self.state == self.MOVING:
+                    # If we are moving, check if we already have covered the required distance
+                    current_dist = calculate_distance(self.starting_pos, self.i_state.position)
+                    if current_dist >= self.target_dist:
+                        await self.a_agent.send_message("action", "stop")
+                        self.state = self.STOPPED
+                        return True
+                    else:
+                        await asyncio.sleep(0)
+                else:
+                    print("Unknown state: " + str(self.state))
+                    return False
+        except asyncio.CancelledError:
+            print("***** TASK Forward CANCELLED")
+            await self.a_agent.send_message("action", "stop")
+            self.state = self.STOPPED
+'''

@@ -1,8 +1,8 @@
 import asyncio
 import random
-import py_trees
-import py_trees as pt
-from py_trees import common
+import py_trees # type: ignore
+import py_trees as pt # type: ignore
+from py_trees import common # type: ignore
 import Goals_BT
 import Sensors
 import time
@@ -169,3 +169,4 @@ class BTRoam:
     async def tick(self):
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
+
