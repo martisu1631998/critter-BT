@@ -29,8 +29,9 @@ class InternalState:
         self.position = {"x": 0, "y": 0, "z": 0}
         self.rotation = {"x": 0, "y": 0, "z": 0}
         # Our variables
-        self.timer = 0
         self.isHungry = False
+        self.isFollowing = False
+        self.timecount = 0.0
         self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
 
 
@@ -42,11 +43,7 @@ class InternalState:
         self.speed = i_state_dict["speed"]
         self.position = i_state_dict["position"]
         self.rotation = i_state_dict["rotation"]
-        # Our variables
-        # self.timer = i_state_dict["timer"]
-        # self.isHungry = i_state_dict["hungry"]
-        # self.obstacleInfo = i_state_dict["obstacleInfo"]
-
+        
 
 class AAgent:
     # Constants that define the state of the simulation

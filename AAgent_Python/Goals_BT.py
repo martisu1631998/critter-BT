@@ -4,7 +4,7 @@ import asyncio
 import Sensors
 from collections import Counter
 
-
+ 
 def calculate_distance(point_a, point_b):
     distance = math.sqrt((point_b['x'] - point_a['x']) ** 2 +
                          (point_b['y'] - point_a['y']) ** 2 +
@@ -152,4 +152,5 @@ class Turn:
         except asyncio.CancelledError:
             print("***** TASK Turn CANCELLED")
             await self.a_agent.send_message("action", "nt")
+
 
