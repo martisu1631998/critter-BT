@@ -26,7 +26,6 @@ class ManageObs(pt.behaviour.Behaviour):
         super(ManageObs, self).__init__("ManageObs")
         self.logger.debug("Initializing ManageObs")
         self.my_agent = aagent
-        
 
     def initialise(self):
         # No immediate obstacle --> do nothing
