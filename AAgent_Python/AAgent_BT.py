@@ -27,6 +27,14 @@ class InternalState:
         self.speed = 0.0
         self.position = {"x": 0, "y": 0, "z": 0}
         self.rotation = {"x": 0, "y": 0, "z": 0}
+        # Our variables
+        self.isHungry = False
+        self.obstacleInfo = 0
+        '''
+        0: No obstacles             1: Obstacle  on the right
+        2: Obstacle on the left     4: Obstacle on the center
+        '''
+
 
     def set_internal_state(self, i_state_dict):
         self.isRotatingRight = i_state_dict["isRotatingRight"]
@@ -36,6 +44,8 @@ class InternalState:
         self.speed = i_state_dict["speed"]
         self.position = i_state_dict["position"]
         self.rotation = i_state_dict["rotation"]
+        self.isHungry = i_state_dict["hungry"]
+        self.obstacleInfo = i_state_dict["obstacleInfo"]
 
 
 class AAgent:

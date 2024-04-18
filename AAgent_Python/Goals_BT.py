@@ -153,7 +153,7 @@ class Turn:
             print("***** TASK Turn CANCELLED")
             await self.a_agent.send_message("action", "nt")
 
-
+'''
 class AvoidObs:
     """
         Avoids obstacle by entering a loop where it turns a bit
@@ -205,3 +205,4 @@ class AvoidObs:
             print("***** TASK Forward CANCELLED")
             await self.a_agent.send_message("action", "stop")
             self.state = self.STOPPED
+'''
