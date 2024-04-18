@@ -30,6 +30,7 @@ class InternalState:
         # Our variables
         self.timer = 0
         self.isHungry = False
+        self.isFollowing = False
         self.obstacleInfo = 0
         '''
         0: No obstacles             1: Obstacle  on the right
@@ -48,6 +49,7 @@ class InternalState:
         # Our variables
         self.timer = i_state_dict["timer"]
         self.isHungry = i_state_dict["hungry"]
+        self.isFollowing = i_state_dict["following"]
         self.obstacleInfo = i_state_dict["obstacleInfo"]
 
 
