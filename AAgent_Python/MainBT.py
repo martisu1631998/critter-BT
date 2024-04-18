@@ -3,9 +3,10 @@ import random
 import time
 import py_trees as pt 
 from py_trees import common
-from AAgent_Python.Conditions import *
+from Conditions import *
 import Goals_BT
 import Sensors
+import Base_Actions
 
 
 '''
@@ -42,6 +43,10 @@ class GlobalBT:
         follow.add_children([Is_Astronaut(aagent), Following(aagent)])
 
         # Search astronaut
+        search = pt.composites.Sequence("Search astronaut", memory=False)
+        search.add_children([Is_Following(aagent), Searching(aagent)])
+
+        # Roam around
         search = pt.composites.Sequence("Search astronaut", memory=False)
         search.add_children([Is_Following(aagent), Searching(aagent)])
 

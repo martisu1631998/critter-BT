@@ -4,8 +4,8 @@ from py_trees import common
 import Goals_BT
 import Sensors
 import time
-from AAgent_Python.Conditions import *
-from ActionsBT import *
+from Conditions import *
+from Compound_Actions import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -133,9 +133,7 @@ class BTRoam:
 
         # VERSION 1
         self.root = pt.composites.Sequence(name="Selector", memory=True)
-        self.root.add_children([Approach_Object(aagent, "Flower"), BN_TurnRandom(aagent),
-                                BN_ForwardRandom(aagent),
-                                BN_DoNothing(aagent)])
+        self.root.add_children([BN_TurnRandom(aagent)])
 
         # VERSION 2
         # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())

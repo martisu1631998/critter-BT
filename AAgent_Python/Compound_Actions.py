@@ -3,11 +3,67 @@ from py_trees import common
 import Sensors
 import asyncio
 from Goals_BT import *
+from Base_Actions import *
 
 '''
 All the main behaviour tree's action leaves.
 They represent different actions that the agent can perform.
 '''
+
+'''
+The agent's default behaviour, just roaming around
+'''
+class roam:
+    def __init__(self, aagent):
+        self.aagent = aagent
+
+        self.root = pt.composites.Parallel("Parallel", policy=pt.common.ParallelPolicy.SuccessOnAll())
+        self.root.add_children([BN_Forward(aagent), BN_Turn(aagent)])
+        self.behaviour_tree = pt.trees.BehaviourTree(self.root)
+
+    # Function to set invalid state for a node and its children recursively
+    def set_invalid_state(self, node):
+        node.status = pt.common.Status.INVALID
+        for child in node.children:
+            self.set_invalid_state(child)
+
+    def stop_behaviour_tree(self):
+        # Setting all the nodes to invalid, we force the associated asyncio tasks to be cancelled
+        self.set_invalid_state(self.root)
+
+    async def tick(self):        
+        self.behaviour_tree.tick()
+        await asyncio.sleep(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
