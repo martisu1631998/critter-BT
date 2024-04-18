@@ -95,18 +95,41 @@ class BN_ManageObstacle(pt.behaviour.Behaviour):
         self.my_goal = None
         print("Initializing BN_ManageObstacle")
         super(BN_ManageObstacle, self).__init__("Normal")
+        self.logger.debug("Initializing BN_ManageObstacle")
         self.my_agent = aagent
         
 
     def initialise(self):
-        pass
-
+        # No immediate obstacle --> do nothing
+        if self.my_agent.i_state.obstacleInfo[1] == 0:
+            self.my_goal = asyncio.create_task(Goals_BT.DoNothing(self.my_agent))
+        # Obstacles on the left --> turn right
+        if self.my_agent.i_state.obstacleInfo[0] == 1:
+            self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
+                                                              direction=1,
+                                                              rotation_amount=15).run())
+        # Obstacles on the right --> turn left
+        elif self.my_agent.i_state.obstacleInfo[2] == 1:
+            self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent,
+                                                             direction=-1,
+                                                             rotation_amount=15).run())
+        
     def update(self):
-        print('Siuu')
-        return pt.common.Status.SUCCESS
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("BN_ManageObstacle completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("BN_ManageObstacle completed with FAILURE")
+                return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
-        pass
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate BN_ManageObstacle")
+        self.my_goal.cancel()
 
 
 
