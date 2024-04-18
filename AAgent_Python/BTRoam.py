@@ -6,7 +6,7 @@ from py_trees import common
 import Goals_BT
 import Sensors
 import time
-
+from Conditions_BT import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -82,8 +82,7 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         else:
             res = self.my_goal.result()
             if res:
-                print("BN_Turn completed with SUCCESS")
-                print(self.my_agent.isHungry)
+                print("BN_Turn completed with SUCCESS")                
                 return pt.common.Status.SUCCESS
             else:
                 print("BN_Turn completed with FAILURE")
@@ -130,7 +129,8 @@ class BTRoam:
 
         # VERSION 1
         self.root = pt.composites.Sequence(name="Sequence", memory=True)
-        self.root.add_children([BN_TurnRandom(aagent),
+        self.root.add_children([Is_Critter(aagent),
+                                BN_TurnRandom(aagent),
                                 BN_ForwardRandom(aagent),
                                 BN_DoNothing(aagent)])
 
