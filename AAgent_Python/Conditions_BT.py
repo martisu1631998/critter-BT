@@ -162,6 +162,8 @@ class Is_Obstacle(pt.behaviour.Behaviour):
 
     def terminate(self, new_status: common.Status):
         pass
+
+    
 '''
 Whether the agent has detected an astronaut or not
 '''
