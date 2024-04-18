@@ -110,7 +110,6 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
                 if sensor_obj_info[i]["tag"] == "Flower":
                     print("BN_DetectFlower completed with SUCCESS")
                     return pt.common.Status.SUCCESS
-
         # print("No flower...")
         # print("BN_DetectFlower completed with FAILURE")
         return pt.common.Status.FAILURE
