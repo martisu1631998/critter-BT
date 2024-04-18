@@ -70,6 +70,19 @@ class Is_Flower(pt.behaviour.Behaviour):
         print("Initializing Is_Flower")
         super(Is_Flower, self).__init__("Is_Flower")
         self.my_agent = aagent
+        self.ray_degrees = {
+            0: (-1, 90),
+            1: (-1, 72),
+            2: (-1, 54),
+            3: (-1, 36),
+            4: (-1, 18),
+            5: (1, 0),
+            6: (1, 18),
+            7: (1, 36),
+            8: (1, 54),
+            9: (1, 72),
+            10: (1, 90)
+        }
 
     def initialise(self):
         pass
@@ -79,6 +92,8 @@ class Is_Flower(pt.behaviour.Behaviour):
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If there is a flower
+                    self.my_agent.i_state.flowerDirection = self.ray_degrees[index]
+                    self.my_agent.i_state.flowerDistance = value['distance']
                     print("Flower found!")
                     self.my_agent.isFollowing = False
                     return pt.common.Status.SUCCESS
@@ -115,6 +130,61 @@ class Is_Obstacle(pt.behaviour.Behaviour):
     def terminate(self, new_status: common.Status):
         pass
 
+class Is_Obstacle(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing Is_Obstacle")
+        super(Is_Obstacle, self).__init__("Is_Obstacle")
+        self.my_agent = aagent
+        self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine"]
+        self.hits = [0,0,0]
+
+    def initialise(self):
+        self.hits = [0,0,0]
+
+    def updateObstacleInfo(self):
+        # It has to be updated following these rules so the critter doesn't get stuck.
+        prev = self.my_agent.i_state.obstacleInfo
+        curr = self.hits
+        # If there's obstacles on both sides or none, set the 'obstacle' in the left so it always turns right
+        if prev == [0,0,0] and curr == [1,0,1]:
+            self.my_agent.i_state.obstacleInfo = [1,0,0]
+        elif prev == [0,0,0] and (curr == [1,1,1] or curr == [0,1,0]):
+            self.my_agent.i_state.obstacleInfo = [1,1,0]
+        # If there were not detected obstacles, update normally
+        elif prev == [0,0,0]:
+            self.my_agent.i_state.obstacleInfo = curr
+        elif prev[1] == 0 and curr[1] == 1:
+            self.my_agent.i_state.obstacleInfo[1] = 1
+
+
+    def update(self):
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+        detected = False
+        # Only trigger if the object is detected by the 3 central rays.
+        # Otherways, it's not an obstacle
+        for i in [4,5,6]:
+            if sensor_obj_info[i]:
+                if sensor_obj_info[i]["tag"] in self.always_avoid:
+                    print("Is_Obstacle completed with SUCCESS")
+                    # From i in [4,5,6] to i in [0,1,2]
+                    self.hits[i-4] = 1
+                    detected = True
+                    if sensor_obj_info[i]["tag"] == "AAgentCritterMantaRay":
+                        print("AAAAH! A critter!")                    
+                elif (sensor_obj_info[i]["tag"] == "Flower") and (not self.my_agent.i_state.isHungry):
+                    print("Is_Obstacle completed with SUCCESS")
+                    # From i in [4,5,6] to i in [0,1,2]
+                    self.hits[i-4] = 1
+                    detected = True
+        if detected:
+            self.updateObstacleInfo()
+            return pt.common.Status.SUCCESS
+        self.my_agent.i_state.obstacleInfo = [0,0,0]
+        return pt.common.Status.FAILURE
+
+    def terminate(self, new_status: common.Status):
+        pass
 '''
 Whether the agent has detected an astronaut or not
 '''
@@ -124,6 +194,19 @@ class Is_Astronaut(pt.behaviour.Behaviour):
         print("Initializing Is_Astronaut")
         super(Is_Astronaut, self).__init__("Is_Astronaut")
         self.my_agent = aagent
+        self.ray_degrees = {
+            0: (-1, 90),
+            1: (-1, 72),
+            2: (-1, 54),
+            3: (-1, 36),
+            4: (-1, 18),
+            5: (1, 0),
+            6: (1, 18),
+            7: (1, 36),
+            8: (1, 54),
+            9: (1, 72),
+            10: (1, 90)
+        }
 
     def initialise(self):
         pass
@@ -133,6 +216,8 @@ class Is_Astronaut(pt.behaviour.Behaviour):
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Astronaut":  # If it is the astronaut
+                    self.my_agent.i_state.astronautDirection = self.ray_degrees[index]
+                    self.my_agent.i_state.astronautDistance = value['distance']
                     print("Astronaut encountered!")
                     self.my_agent.isFollowing = True
                     return pt.common.Status.SUCCESS

@@ -67,6 +67,12 @@ class BN_DetectObstacle(pt.behaviour.Behaviour):
 
 
 class BN_ManageObstacle(pt.behaviour.Behaviour):
+    """
+    This behaviour tree (together witth IsObstacle) only modifies the behaviour of the 
+    critter when it has an obstacleright in front. When it has an obstacle close on the 
+    right or in the left, it walks forward but it remembers where the obstacle is, in order
+    to turn the opposite side when it cannot advance.
+    """
     def __init__(self, aagent):
         self.my_goal = None
         print("Initializing BN_ManageObstacle")
