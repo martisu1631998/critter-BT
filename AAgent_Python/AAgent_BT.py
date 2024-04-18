@@ -5,7 +5,7 @@ import json
 import Sensors
 import Goals_BT
 import BTRoam
-import BTCritter
+# import BTCritter
 
 
 class InternalState:
@@ -35,6 +35,7 @@ class InternalState:
         self.isFollowing = False
         self.timecount = 0.0
         self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
+        self.rays = [0,0,0,0,0,0,0,0,0,0,0]
 
 
     def set_internal_state(self, i_state_dict):
@@ -91,8 +92,8 @@ class AAgent:
 
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
-            "BTRoam": BTRoam.BTRoam(self),
-            "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
+            "BTRoam": BTRoam.BTRoam(self)
+            # "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
         }
 
         # Active behaviour tree

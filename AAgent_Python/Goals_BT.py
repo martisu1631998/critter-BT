@@ -118,10 +118,10 @@ class Turn:
                         self.direction = random.choice([self.LEFT, self.RIGHT])
                     if self.direction == self.RIGHT:
                         await self.a_agent.send_message("action", "tr")
-                        # print("Direction: RIGHT")
+                        print("Direction: RIGHT")
                     else:
                         await self.a_agent.send_message("action", "tl")
-                        # print("Direction: LEFT")
+                        print("Direction: LEFT")
                     self.prev_rotation = self.i_state.rotation["y"]
                     self.accumulated_rotation = 0
                     self.state = self.TURNING

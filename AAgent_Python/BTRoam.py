@@ -7,6 +7,7 @@ import Goals_BT
 import Sensors
 import time
 from Conditions_BT import *
+from ActionsBT import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -124,8 +125,9 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
         return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
-        self.logger.debug("Terminate BN_DetectFlower")
-        self.my_goal.cancel()
+        pass
+        # self.logger.debug("Terminate BN_DetectFlower")
+        # self.my_goal.cancel()
             
 
 
@@ -138,10 +140,9 @@ class BTRoam:
 
         # VERSION 1
         self.root = pt.composites.Sequence(name="Sequence", memory=True)
-        self.root.add_children([Is_Critter(aagent),
-                                BN_TurnRandom(aagent),
-                                BN_ForwardRandom(aagent),
-                                BN_DoNothing(aagent)])
+        self.root.add_children([Is_Hungry(aagent),
+                                Is_Flower(aagent),
+                                Approach_Flower(aagent)])
 
         # VERSION 2
         # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())

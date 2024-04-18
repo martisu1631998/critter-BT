@@ -6,6 +6,7 @@ from py_trees import common
 from Conditions_BT import *
 import Goals_BT
 import Sensors
+from ActionsBT import *
 
 
 '''
@@ -27,7 +28,7 @@ class GlobalBT:
 
         # Eat flowers
         eat = pt.composites.Sequence("Eat", memory=True)
-        eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
+        eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Approach_Flower(aagent), Eating(aagent)])
  
         # Avoid obstacles
         obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
