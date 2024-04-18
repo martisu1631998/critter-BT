@@ -5,6 +5,7 @@ import json
 import Sensors
 import Goals_BT
 import BTRoam
+import BTCritter
 
 
 class InternalState:
@@ -46,9 +47,9 @@ class InternalState:
         self.position = i_state_dict["position"]
         self.rotation = i_state_dict["rotation"]
         # Our variables
-        self.timer = i_state_dict["timer"]
-        self.isHungry = i_state_dict["hungry"]
-        self.obstacleInfo = i_state_dict["obstacleInfo"]
+        # self.timer = i_state_dict["timer"]
+        # self.isHungry = i_state_dict["hungry"]
+        # self.obstacleInfo = i_state_dict["obstacleInfo"]
 
 
 class AAgent:
@@ -96,6 +97,7 @@ class AAgent:
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
             "BTRoam": BTRoam.BTRoam(self)
+            "BTCritter": BtCritter.BTRoamAdvanced(self)
         }
 
         # Active behaviour tree
