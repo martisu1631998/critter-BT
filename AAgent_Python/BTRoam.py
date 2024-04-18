@@ -1,12 +1,13 @@
 import asyncio
 import random
-import py_trees # type: ignore
-import py_trees as pt # type: ignore
-from py_trees import common # type: ignore
+import py_trees
+import py_trees as pt
+from py_trees import common
 import Goals_BT
 import Sensors
-
-
+import time
+from Conditions_BT import *
+ 
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
         self.my_agent = aagent
@@ -72,15 +73,16 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         self.my_agent = aagent
 
     def initialise(self):
-        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent).run())
+        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, -1, 360).run())
 
     def update(self):
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]        
         if not self.my_goal.done():
             return pt.common.Status.RUNNING
         else:
             res = self.my_goal.result()
             if res:
-                print("BN_Turn completed with SUCCESS")
+                print("BN_Turn completed with SUCCESS")                
                 return pt.common.Status.SUCCESS
             else:
                 print("BN_Turn completed with FAILURE")
@@ -104,8 +106,6 @@ class BN_DetectFlower(pt.behaviour.Behaviour):
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        print(type(sensor_obj_info))
-        print(sensor_obj_info)
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If it is a flower
@@ -125,26 +125,28 @@ class BTRoam:
         # py_trees.logging.level = py_trees.logging.Level.DEBUG
 
         self.aagent = aagent
+        self.initTime = time.time()
 
         # VERSION 1
-        # self.root = pt.composites.Sequence(name="Sequence", memory=True)
-        # self.root.add_children([BN_TurnRandom(aagent),
-        #                         BN_ForwardRandom(aagent),
-        #                         BN_DoNothing(aagent)])
+        self.root = pt.composites.Sequence(name="Sequence", memory=True)
+        self.root.add_children([Is_Critter(aagent),
+                                BN_TurnRandom(aagent),
+                                BN_ForwardRandom(aagent),
+                                BN_DoNothing(aagent)])
 
         # VERSION 2
         # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
         # self.root.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
         # VERSION 3 (with DetectFlower)
-        detection = pt.composites.Sequence(name="DetectFlower", memory=True)
-        detection.add_children([BN_DetectFlower(aagent), BN_DoNothing(aagent)])
+        # detection = pt.composites.Sequence(name="DetectFlower", memory=True)
+        # detection.add_children([BN_DetectFlower(aagent), BN_DoNothing(aagent)])
 
-        roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
-        roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
+        # roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
+        # roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
-        self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([detection, roaming])
+        # self.root = pt.composites.Selector(name="Selector", memory=False)
+        # self.root.add_children([detection, roaming])
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
@@ -159,22 +161,12 @@ class BTRoam:
         self.set_invalid_state(self.root)
 
     async def tick(self):
+        # Control the time passed until the agent is hungry
+        self.aagent.timecount = time.time() - self.initTime
+        if self.aagent.timecount < 15:
+            self.aagent.isHungry = False
+        else:
+            self.aagent.isHungry = True
+
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
-
-
-'''
-    def update(self):
-        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        print(type(sensor_obj_info))
-        print(sensor_obj_info)
-        for index, value in enumerate(sensor_obj_info):
-            if value:  # there is a hit with an object
-                if value["tag"] == "Flower":  # If it is a flower
-                    # print("Flower detected!")
-                    print("BN_DetectFlower completed with SUCCESS")
-                    return pt.common.Status.SUCCESS
-        # print("No flower...")
-        # print("BN_DetectFlower completed with FAILURE")
-        return pt.common.Status.FAILURE
-'''
