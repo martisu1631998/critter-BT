@@ -4,7 +4,7 @@ import time
 import py_trees as pt 
 from py_trees import common
 from Conditions_BT import *
-import Goals_BT
+from Goals_BT import *
 import Sensors
 
 

@@ -90,7 +90,8 @@ class AAgent:
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
             "BTRoam": BTRoam.BTRoam(self),
-            "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
+            "TestBT": BTCritter.Test(self),
+            # "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self), # Antiquat
         }
 
         # Active behaviour tree
