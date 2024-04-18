@@ -107,28 +107,6 @@ class Is_Flower(pt.behaviour.Behaviour):
 '''
 Whether the agent has detected an obstacle or not
 '''
-class Is_Obstacle(pt.behaviour.Behaviour):
-    def __init__(self, aagent):
-        self.my_goal = None
-        print("Initializing Is_Obstacle")
-        super(Is_Obstacle, self).__init__("Is_Obstacle")
-        self.my_agent = aagent
-
-    def initialise(self):
-        pass
-
-    def update(self):
-        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        for index, value in enumerate(sensor_obj_info):
-            if value:  # there is a hit with an object
-                if (value["tag"] == "Rock") or (value["tag"] == "Wall") or (value["tag"] == "Machine") or (value["tag"] == "Flower"): # If there is an obstacle
-                    print("There is an obstacle!")                    
-                    return pt.common.Status.SUCCESS
-
-        return pt.common.Status.FAILURE
-
-    def terminate(self, new_status: common.Status):
-        pass
 
 class Is_Obstacle(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -156,7 +134,6 @@ class Is_Obstacle(pt.behaviour.Behaviour):
             self.my_agent.i_state.obstacleInfo = curr
         elif prev[1] == 0 and curr[1] == 1:
             self.my_agent.i_state.obstacleInfo[1] = 1
-
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
@@ -251,3 +228,31 @@ class Is_Following(pt.behaviour.Behaviour):
 
     def terminate(self, new_status: common.Status):
         pass
+
+
+    """
+    Old version of IsObstacle:
+
+    class Is_Obstacle(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing Is_Obstacle")
+        super(Is_Obstacle, self).__init__("Is_Obstacle")
+        self.my_agent = aagent
+
+    def initialise(self):
+        pass
+
+    def update(self):
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+        for index, value in enumerate(sensor_obj_info):
+            if value:  # there is a hit with an object
+                if (value["tag"] == "Rock") or (value["tag"] == "Wall") or (value["tag"] == "Machine") or (value["tag"] == "Flower"): # If there is an obstacle
+                    print("There is an obstacle!")                    
+                    return pt.common.Status.SUCCESS
+
+        return pt.common.Status.FAILURE
+
+    def terminate(self, new_status: common.Status):
+        pass
+    """

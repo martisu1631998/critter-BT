@@ -4,6 +4,7 @@ import time
 import py_trees as pt 
 from py_trees import common
 from Conditions_BT import *
+from ActionsBT import *
 from Goals_BT import *
 import Sensors
 from ActionsBT import *
@@ -22,10 +23,6 @@ class GlobalBT:
         
         # Create sub-trees
 
-        # Avoid critters
-        critter = pt.composites.Sequence(name="Avoid critter", memory=True)
-        critter.add_children([Is_Critter(aagent), Avoid_Critter(aagent)])
-
         # Eat flowers
         eat = pt.composites.Sequence("Eat", memory=True)
         eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Approach_Flower(aagent), Eating(aagent)])
@@ -36,7 +33,7 @@ class GlobalBT:
 
         # Follow astronaut
         follow = pt.composites.Sequence("Follow astronaut", memory=True)
-        follow.add_children([Is_Astronaut(aagent), Following(aagent)])
+        follow.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
 
         # Search astronaut
         search = pt.composites.Sequence("Search astronaut", memory=True)
