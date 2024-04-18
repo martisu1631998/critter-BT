@@ -3,7 +3,7 @@ import random
 import time
 import py_trees as pt 
 from py_trees import common
-import Conditions_BT
+from Conditions_BT import *
 import Goals_BT
 import Sensors
 
@@ -69,4 +69,6 @@ class GlobalBT:
         await asyncio.sleep(0)
 
 
+
+xd = GlobalBT(aagent={})
 
