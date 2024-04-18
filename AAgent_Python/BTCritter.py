@@ -247,7 +247,7 @@ class Test:
 
         # Root
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([critter, roaming])
+        self.root.add_children([critter, astronaut, roaming])
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
