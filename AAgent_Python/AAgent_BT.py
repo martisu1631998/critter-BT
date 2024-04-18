@@ -40,11 +40,7 @@ class InternalState:
         self.speed = i_state_dict["speed"]
         self.position = i_state_dict["position"]
         self.rotation = i_state_dict["rotation"]
-        # Our variables
-        self.isHungry = False
-        self.isFollowing = False
-        self.timecount = 0.0
-
+        
 
 class AAgent:
     # Constants that define the state of the simulation

@@ -106,7 +106,7 @@ class Is_Obstacle(pt.behaviour.Behaviour):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
-                if (value["tag"] == "Rock") or (value["tag"] == "Wall") or (value["tag"] == "Machine"): # If there is an obstacle
+                if (value["tag"] == "Rock") or (value["tag"] == "Wall") or (value["tag"] == "Machine") or (value["tag"] == "Flower"): # If there is an obstacle
                     print("There is an obstacle!")                    
                     return pt.common.Status.SUCCESS
 
