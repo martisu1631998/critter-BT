@@ -67,6 +67,9 @@ class ManageObs(pt.behaviour.Behaviour):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate BN_ManageObstacle")
         self.my_goal.cancel()
+        
+        
+""""
 class Approach_Flower(pt.behaviour.Behaviour):
     STOPPED = 0
     TURNING = 1
@@ -101,13 +104,14 @@ class Approach_Flower(pt.behaviour.Behaviour):
         elif self.state == self.TURNING:
             self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree_rotation).run())
             print("Successfully turned to the flower!")
+            self.state = self.MOVING_FORWARD
             
         elif self.state == self.MOVING_FORWARD:
             self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, self.distance, -1, 10).run())     
             print("Approach_Flower SUCCESS")
             return pt.common.Status.SUCCESS
-        
-        """"
+    
+
         
         if self.state == self.STOPPED:
             sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
@@ -165,7 +169,6 @@ class Approach_Flower(pt.behaviour.Behaviour):
             self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, value["distance"], -1, 10).run())     
             print("Approach_Flower SUCCESS")
             return pt.common.Status.SUCCESS
-        """
         
         print("Approach_Flower completed with FAILURE")
         return pt.common.Status.FAILURE
@@ -174,3 +177,4 @@ class Approach_Flower(pt.behaviour.Behaviour):
         pass
         # self.logger.debug("Terminate BN_DetectFlower")
         # self.my_goal.cancel()
+"""
