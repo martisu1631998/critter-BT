@@ -157,10 +157,9 @@ class Is_Astronaut(pt.behaviour.Behaviour):
                 if value["tag"] == "Astronaut":  # If it is the astronaut
                     self.my_agent.i_state.astronautDirection = self.ray_degrees[index]
                     self.my_agent.i_state.astronautDistance = value['distance']
-                    print("Astronaut encountered!")
+                    # print("Astronaut encountered!")
                     self.my_agent.isFollowing = True
                     return pt.common.Status.SUCCESS
-
         return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
