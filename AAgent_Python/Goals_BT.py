@@ -97,10 +97,10 @@ class Turn:
     def __init__(self, a_agent, direction=None, rotation_amount=None):
         self.a_agent = a_agent
         self.rc_sensor = a_agent.rc_sensor
-        self.i_state = a_agent.i_state
-        self.rotation_amount = rotation_amount
+        self.i_state = a_agent.i_state        
         self.prev_rotation = 0
-        self.accumulated_rotation = 0
+        self.accumulated_rotation = 0        
+        self.rotation_amount = rotation_amount
         self.direction = direction
         self.state = self.SELECTING
 
@@ -116,17 +116,15 @@ class Turn:
                     if self.direction is None:
                         self.direction = random.choice([self.LEFT, self.RIGHT])
                     if self.direction == self.RIGHT:
-                        await self.a_agent.send_message("action", "tr")
-                        # print("Direction: RIGHT")
+                        await self.a_agent.send_message("action", "tr")                        
                     else:
-                        await self.a_agent.send_message("action", "tl")
-                        # print("Direction: LEFT")
+                        await self.a_agent.send_message("action", "tl")                        
                     self.prev_rotation = self.i_state.rotation["y"]
                     self.accumulated_rotation = 0
                     self.state = self.TURNING
-                    # print("TURNING...")
+                    
                 elif self.state == self.TURNING:
-                    # check if we have finished the rotation
+                    # Check if we have finished the rotation
                     current_rotation = self.i_state.rotation["y"]
                     if self.direction == self.RIGHT:
                         if self.prev_rotation > current_rotation: # complete 360 turn clockwise
@@ -141,8 +139,7 @@ class Turn:
                     self.prev_rotation = current_rotation
 
                     if self.accumulated_rotation >= self.rotation_amount:
-                        # We are there
-                        # print("TURNING DONE.")
+                        
                         await self.a_agent.send_message("action", "nt")
                         self.accumulated_rotation = 0
                         self.direction = self.RIGHT
