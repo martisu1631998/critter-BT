@@ -8,52 +8,61 @@ import Sensors
 import BTRoam
 import time
 
-class BTRoam:
+
+class BN_DetectObstacle(pt.behaviour.Behaviour):
     def __init__(self, aagent):
-        # py_trees.logging.level = py_trees.logging.Level.DEBUG
+        self.my_goal = None
+        print("Initializing BN_DetectFlower")
+        super(BN_DetectObstacle, self).__init__("BN_DetectObstacle")
+        self.my_agent = aagent
+        self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine"]
 
-        self.aagent = aagent
+    def initialise(self):
+        pass
 
-        # VERSION 1
-        # self.root = pt.composites.Sequence(name="Sequence", memory=True)
-        # self.root.add_children([BN_TurnRandom(aagent),
-        #                         BN_ForwardRandom(aagent),
-        #                         BN_DoNothing(aagent)])
+    def update(self):
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+        for index, value in enumerate(sensor_obj_info):
+            if value:  # there is a hit with an object
+                if value["tag"] in self.always_avoid: # If it's one of the things we always want to avoid
+                    print("BN_DetectObstacle completed with SUCCESS")
+                    return pt.common.Status.SUCCESS
+                if value["tag"] == "Flower":
+                    if not hungry:
+                        return pt.common.Status.SUCCESS
+        return pt.common.Status.FAILURE
 
-        # VERSION 2
-        # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
-        # self.root.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
+    def terminate(self, new_status: common.Status):
+        pass
 
-        # VERSION 3 (with DetectFlower)
-        detection = pt.composites.Sequence(name="DetectFlower", memory=True)
-        detection.add_children([BN_DetectFlower(aagent), BN_DoNothing(aagent)])
 
-        roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
-        roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
-        self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([detection, roaming])
+class BN_AvoidObstacle(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing BN_AvoidObstacle")
+        super(BN_AvoidObstacle, self).__init__("BN_AvoidObstacle")
+        self.logger.debug("Initializing BN_AvoidObstacle")
+        self.my_agent = aagent
 
-        self.behaviour_tree = pt.trees.BehaviourTree(self.root)
+    def initialise(self):
+        self.logger.debug("Create Goals_BT.AvoidObs task")
+        self.my_goal = asyncio.create_task(Goals_BT.AvoidObst(self.my_agent).run())
 
-        self.initTime = time.time() # This will be updated every time hungry is set to false again
-        self.timer = 0 # This will be initialized every time hungry is set to false again
-
-    # Function to set invalid state for a node and its children recursively
-    def set_invalid_state(self, node):
-        node.status = pt.common.Status.INVALID
-        for child in node.children:
-            self.set_invalid_state(child)
-
-    def stop_behaviour_tree(self):
-        # Setting all the nodes to invalid, we force the associated asyncio tasks to be cancelled
-        self.set_invalid_state(self.root)
-
-    async def tick(self):
-        self.timer = time.time() - self.initTime
-        if self.timer < 15:
-            self.hungry = False
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
         else:
-            self.hungry = True
-        self.behaviour_tree.tick()
-        await asyncio.sleep(0)
+            if self.my_goal.result():
+                self.logger.debug("BN_ForwardRandom completed with SUCCESS")
+                print("BN_ForwardRandom completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                self.logger.debug("BN_ForwardRandom completed with FAILURE")
+                print("BN_ForwardRandom completed with FAILURE")
+                return pt.common.Status.FAILURE
+
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate BN_ForwardRandom")
+        self.my_goal.cancel()
