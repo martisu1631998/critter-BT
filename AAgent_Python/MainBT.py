@@ -15,30 +15,34 @@ It can avoid obstacles encountered, avoid critters encountered, eat flowers, fol
 '''
 class GlobalBT:
     def __init__(self, aagent):
-        # Initialize agent atributes
+        # Initialize variables and agent atributes
         self.aagent = aagent
-        self.initTime = time.time()               
+        self.initTime = time.time()    
+        self.aagent.isFollowing = False
+        self.aagent.isHungry = False
+        self.aagent.timecount = 0.0
+        self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]           
         
         # Create sub-trees
 
         # Avoid critters
-        critter = pt.composites.Sequence(name="Avoid critter", memory=True)
+        critter = pt.composites.Sequence(name="Avoid critter", memory=False)
         critter.add_children([Is_Critter(aagent), Avoid_Critter(aagent)])
 
         # Eat flowers
-        eat = pt.composites.Sequence("Eat", memory=True)
+        eat = pt.composites.Sequence("Eat", memory=False)
         eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
  
         # Avoid obstacles
-        obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
+        obstacle = pt.composites.Sequence("Avoid obstacles", memory=False)
         follow.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
 
         # Follow astronaut
-        follow = pt.composites.Sequence("Follow astronaut", memory=True)
+        follow = pt.composites.Sequence("Follow astronaut", memory=False)
         follow.add_children([Is_Astronaut(aagent), Following(aagent)])
 
         # Search astronaut
-        search = pt.composites.Sequence("Search astronaut", memory=True)
+        search = pt.composites.Sequence("Search astronaut", memory=False)
         search.add_children([Is_Following(aagent), Searching(aagent)])
 
         # Tree root selector

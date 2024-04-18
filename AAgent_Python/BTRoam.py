@@ -82,7 +82,7 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         else:
             res = self.my_goal.result()
             if res:
-                print("BN_Turn completed with SUCCESS")                
+                print("BN_Turn completed with SUCCESS")                          
                 return pt.common.Status.SUCCESS
             else:
                 print("BN_Turn completed with FAILURE")
@@ -126,11 +126,14 @@ class BTRoam:
 
         self.aagent = aagent
         self.initTime = time.time()
+        self.aagent.isFollowing = False
+        self.aagent.isHungry = False
+        self.aagent.timecount = 0.0
+        self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]
 
         # VERSION 1
-        self.root = pt.composites.Sequence(name="Sequence", memory=True)
-        self.root.add_children([Is_Critter(aagent),
-                                BN_TurnRandom(aagent),
+        self.root = pt.composites.Selector(name="Selector", memory=True)
+        self.root.add_children([Is_Hungry(aagent), BN_TurnRandom(aagent),
                                 BN_ForwardRandom(aagent),
                                 BN_DoNothing(aagent)])
 
