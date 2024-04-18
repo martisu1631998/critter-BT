@@ -28,7 +28,7 @@ class GlobalBT:
         # Eat flowers
         eat = pt.composites.Sequence("Eat", memory=True)
         eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
-
+ 
         # Avoid obstacles
         obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
         follow.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
