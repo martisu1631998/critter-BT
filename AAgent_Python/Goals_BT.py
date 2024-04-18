@@ -158,7 +158,6 @@ class ApproachObject:
         self.rc_sensor = a_agent.rc_sensor
         self.i_state = a_agent.i_state
         self.target_pos = None
-        self.state = self.APPROACHING
         
     def initialise_position(self, object):
         self.object = object['tag']
@@ -168,9 +167,10 @@ class ApproachObject:
     async def run(self):
         try:
             while True:
+                print("Starting to approach...")
                 if self.state == self.APPROACHING:
-                    print("Calculating distance...")
-                    current_distance = calculate_distance(self.i_state.position, self.target_pos)
+                    # print("Calculating distance...")
+                    # current_distance = calculate_distance(self.i_state.position, self.target_pos)
                     if self.distance < 0.1: # Stop when we are 10 cm away from the object
                         await self.a_agent.send_message("action", "stop")
                         self.state = self.REACHED
@@ -179,7 +179,14 @@ class ApproachObject:
                     else:
                         # Move towards the object
                         await self.a_agent.send_message("action", "mf")
-                        print("Moving towards the object...")
+                        # Update the distance to the object
+                        sensor_obj_info = self.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+                        for value in sensor_obj_info:
+                            if value:  # there is a hit with an object
+                                if value["tag"] == "Flower":  # If it is a flower
+                                    self.distance = value["distance"]
+                                    print("New distance:", self.distance)
+                                    break
                     await asyncio.sleep(0)
                 
                 elif self.state == self.REACHED:
