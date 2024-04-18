@@ -1,12 +1,11 @@
 import asyncio
-import random
-import py_trees
 import py_trees as pt
 from py_trees import common
 import Goals_BT
 import Sensors
 import time
-from Conditions_BT import *
+from AAgent_Python.Conditions import *
+from ActionsBT import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -82,7 +81,8 @@ class BN_TurnRandom(pt.behaviour.Behaviour):
         else:
             res = self.my_goal.result()
             if res:
-                print("BN_Turn completed with SUCCESS")                          
+                print("BN_Turn completed with SUCCESS")  
+                print(sensor_obj_info)                        
                 return pt.common.Status.SUCCESS
             else:
                 print("BN_Turn completed with FAILURE")
@@ -132,8 +132,8 @@ class BTRoam:
         self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]
 
         # VERSION 1
-        self.root = pt.composites.Selector(name="Selector", memory=True)
-        self.root.add_children([Is_Hungry(aagent), BN_TurnRandom(aagent),
+        self.root = pt.composites.Sequence(name="Selector", memory=True)
+        self.root.add_children([Approach_Object(aagent, "Flower"), BN_TurnRandom(aagent),
                                 BN_ForwardRandom(aagent),
                                 BN_DoNothing(aagent)])
 

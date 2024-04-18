@@ -4,7 +4,7 @@ import asyncio
 import json
 import Sensors
 import Goals_BT
-import BTRoam
+import AAgent_Python.Testing as Testing
 
 
 
@@ -84,7 +84,7 @@ class AAgent:
 
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
-            "BTRoam": BTRoam.BTRoam(self)            
+            "BTRoam": Testing.BTRoam(self)            
         }
 
         # Active behaviour tree

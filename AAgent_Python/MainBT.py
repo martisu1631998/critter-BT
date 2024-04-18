@@ -3,7 +3,7 @@ import random
 import time
 import py_trees as pt 
 from py_trees import common
-from Conditions_BT import *
+from AAgent_Python.Conditions import *
 import Goals_BT
 import Sensors
 
