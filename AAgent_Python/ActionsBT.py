@@ -1,8 +1,8 @@
 import asyncio
 import random
-import py_trees
-import py_trees as pt
-from py_trees import common
+import py_trees # type: ignore
+import py_trees as pt # type: ignore
+from py_trees import common # type: ignore
 import Goals_BT
 import Sensors
 import time
@@ -178,6 +178,7 @@ class Eating(pt.behaviour.Behaviour):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate Eating")
         self.my_goal.cancel()
+
 
 class TurnToAstronaut(pt.behaviour.Behaviour):
     def __init__(self, aagent):

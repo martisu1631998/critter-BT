@@ -5,7 +5,8 @@ import json
 import Sensors
 import Goals_BT
 import BTRoam
-# import BTCritter
+import BTCritter
+import MainBT
 
 
 class InternalState:
@@ -95,7 +96,9 @@ class AAgent:
 
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {
-            "BTRoam": BTRoam.BTRoam(self)
+            "BTRoam": BTRoam.BTRoam(self),
+            "TestBT": BTCritter.Test(self),
+            "MainBT": MainBT.GlobalBT(self)
             # "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
         }
 
