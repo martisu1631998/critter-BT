@@ -35,7 +35,7 @@ class InternalState:
         self.isHungry = False
         self.isFollowing = False
         self.initTime = 0.0
-        self.timecount = 0.0
+        # self.timecount = 0.0
         self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
         self.flowerDirection = 0
         self.flowerDistance = 0

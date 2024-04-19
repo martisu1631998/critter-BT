@@ -169,8 +169,7 @@ class Eating(pt.behaviour.Behaviour):
                 print("Eating completed with SUCCESS")
                 print("Not hungry anymore :)")
                 self.my_agent.i_state.isHungry = False
-                self.my_agent.i_state.initTime = 0.0
-                self.my_agent.i_state.timecount = 0.0
+                self.my_agent.i_state.initTime = time.time()
                 return pt.common.Status.SUCCESS
             else:
                 print("Eating completed with FAILURE")

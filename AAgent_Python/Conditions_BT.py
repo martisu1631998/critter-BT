@@ -53,14 +53,14 @@ class Is_Hungry(pt.behaviour.Behaviour):
 
     def update(self):
         # Control the time passed until the agent is hungry
-        self.my_agent.i_state.timecount = time.time() - self.my_agent.i_state.initTime
-        if self.my_agent.i_state.timecount < 15:
+        timecount = time.time() - self.my_agent.i_state.initTime
+        if timecount < 30: # 30 seconds instead of 15 so we have more time
             self.my_agent.i_state.isHungry = False
         else:
             self.my_agent.i_state.isHungry = True
         
         if self.my_agent.i_state.isHungry:
-            # print("I am hungry!")
+            print("I am hungry!")
             return pt.common.Status.SUCCESS
 
         return pt.common.Status.FAILURE
