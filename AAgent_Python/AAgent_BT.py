@@ -5,7 +5,6 @@ import json
 import Sensors
 import Goals_BT
 import MainBT
-import Testing as Testing
 import Compound_Actions
 from Base_Actions import *
 
@@ -86,8 +85,7 @@ class AAgent:
         self.currentGoal = None
 
         # Reference to the possible behaviour trees the agent ca execute
-        self.bts = {
-            "BTRoam": Testing.BTRoam(self),
+        self.bts = {            
             "MainBT": MainBT.GlobalBT(self)          
         }
 

@@ -42,7 +42,7 @@ class GlobalBT:
         eat = pt.composites.Sequence("Eat", memory=True)
         eat.add_children([Is_Hungry(aagent), 
                           Is_Flower(aagent), 
-                          BN_Turn(aagent, aagent.flowerDirection[0], aagent.flowerDirection[1]), 
+                          BN_Turn(aagent, self.aagent.flowerDirection[0], self.aagent.flowerDirection[1]), 
                           BN_Forward(aagent.flowerDistance), 
                           Eating(aagent)])
  

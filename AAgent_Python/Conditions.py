@@ -93,6 +93,8 @@ class Is_Flower(pt.behaviour.Behaviour):
                 if value["tag"] == "Flower":  # If there is a flower
                     self.my_agent.flowerDirection = self.ray_degrees[index]
                     self.my_agent.flowerDistance = value['distance']
+                    print(self.my_agent.flowerDirection)
+                    print(self.my_agent.flowerDistance)
                     print("Flower found!")
                     self.my_agent.isFollowing = False
                     return pt.common.Status.SUCCESS
