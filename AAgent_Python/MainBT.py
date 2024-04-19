@@ -1,8 +1,8 @@
 import asyncio
 import random
 import time
-import py_trees as pt 
-from py_trees import common
+import py_trees as pt  # type: ignore
+from py_trees import common # type: ignore
 from BTRoam import *
 from Conditions_BT import *
 from ActionsBT import *
@@ -46,7 +46,7 @@ class GlobalBT:
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([eat(aagent), obstacle(aagent), follow(aagent), roaming(aagent)]) # search(aagent)
+        self.root.add_children([eat, obstacle, follow, roaming]) # search(aagent)
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
@@ -73,5 +73,5 @@ class GlobalBT:
 
 
 
-xd = GlobalBT(aagent={})
+# xd = GlobalBT(aagent={})
 

@@ -184,7 +184,7 @@ class TurnToAstronaut(pt.behaviour.Behaviour):
     def __init__(self, aagent):
         self.my_goal = None
         print("Initializing TurnToAstronaut")
-        super(ManageObs, self).__init__("TurnToAstronaut")
+        super(TurnToAstronaut, self).__init__("TurnToAstronaut")
         self.logger.debug("TurnToAstronaut")
         self.my_agent = aagent
 
@@ -214,7 +214,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
     def __init__(self, aagent):
         self.my_goal = None
         print("Initializing GoToAstronaut")
-        super(ManageObs, self).__init__("GoToAstronaut")
+        super(GoToAstronaut, self).__init__("GoToAstronaut")
         self.logger.debug("GoToAstronaut")
         self.my_agent = aagent
 
