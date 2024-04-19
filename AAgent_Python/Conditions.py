@@ -109,18 +109,20 @@ class Is_Flower(pt.behaviour.Behaviour):
 Whether the agent has detected an obstacle or not
 '''
 class Is_Obstacle(pt.behaviour.Behaviour):
-    def __init__(self, aagent):
+    def __init__(self, aagent, i , j):
         self.my_goal = None
         print("Initializing Is_Obstacle")
         super(Is_Obstacle, self).__init__("Is_Obstacle")
         self.my_agent = aagent
+        self.i = i
+        self.j = j
 
     def initialise(self):
         pass
 
     def update(self):
         sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        for index, value in enumerate(sensor_obj_info[4:7]):
+        for index, value in enumerate(sensor_obj_info[self.i:self.j]):
             if value:  # there is a hit with an object
                 if (value["tag"] == "Untagged") or (value["tag"] == "Wall") or (value["tag"] == "Machine") or (value["tag"] == "Flower"): # If there is an obstacle
                     print("There is an obstacle!")                                        

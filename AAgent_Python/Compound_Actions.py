@@ -25,11 +25,13 @@ class TurnToFlower(pt.behaviour.Behaviour):
     
     def initialise(self):
         self.direction = self.my_agent.i_state.flowerDirection[0]
-        self.degree_rotation = self.my_agent.i_state.flowerDirection[1]        
+        self.degree_rotation = self.my_agent.i_state.flowerDirection[1]
+        direction = self.my_agent.i_state.flowerDirection
         self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree_rotation).run())
         
     def update(self):
-        if not self.my_goal.done():            
+        if not self.my_goal.done():
+            print("Still running...")
             return pt.common.Status.RUNNING
         else:
             res = self.my_goal.result()
@@ -81,33 +83,100 @@ class Eating(pt.behaviour.Behaviour):
         self.my_goal = None
         print("Initializing eating...")
         self.my_agent = aagent
-        self.i_state = aagent.i_state
+        # self.i_state = aagent.i_state
         super(Eating, self).__init__("Eating")
-        self.logger.debug("Eating")
-        self.my_goal = None
+        self.logger.debug("Eating")       
         
     def initialise(self):
-        pass
+        self.my_goal = asyncio.create_task(DoNothing(self.my_agent).run())
     
-    def update(self):        
-        print("1...")
-        time.sleep(1)
-        print("2...")
-        time.sleep(1)
-        print("3...")
-        time.sleep(1)
-        print("4...")
-        time.sleep(1)
-        print("5...")
-        time.sleep(1)
-        print("Eating completed with SUCCESS")
-        print("Not hungry anymore :)")
-        self.my_agent.isHungry = False
-        return pt.common.Status.SUCCESS
-
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("1...")
+                time.sleep(1)
+                print("2...")
+                time.sleep(1)
+                print("3...")
+                time.sleep(1)
+                print("4...")
+                time.sleep(1)
+                print("5...")
+                time.sleep(1)
+                print("Eating completed with SUCCESS")
+                print("Not hungry anymore :)")
+                self.my_agent.isHungry = False
+                return pt.common.Status.SUCCESS
+            else:
+                print("Eating completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
     def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate Eating")
+        self.my_goal.cancel()
+
+
+class TurnToAstronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing TurnToAstronaut")
+        super(TurnToAstronaut, self).__init__("TurnToAstronaut")
+        self.logger.debug("TurnToAstronaut")
+        self.my_agent = aagent
+
+    def initialise(self):
+        direction = self.my_agent.i_state.astronautDirection
+        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, *direction).run())
+
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("TurnToAstronaut completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("TurnToAstronaut completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate TurnToAstronaut")
+        self.my_goal.cancel()
+
+
+class GoToAstronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing GoToAstronaut")
+        super(GoToAstronaut, self).__init__("GoToAstronaut")
+        self.logger.debug("GoToAstronaut")
+        self.my_agent = aagent
+
+    def initialise(self):
+        distance = self.my_agent.i_state.astronautDistance
+        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, distance, -1, 1).run())
+
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("BN_ManageObstacle completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("BN_ManageObstacle completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate GoToAstronaut")
         self.my_goal.cancel()
 
 
@@ -143,7 +212,6 @@ class Eating(pt.behaviour.Behaviour):
 
 
 
-'''
 class Approach_Object(pt.behaviour.Behaviour):
     def __init__(self, aagent, object):
         self.my_goal = None
@@ -193,4 +261,3 @@ class Approach_Object(pt.behaviour.Behaviour):
     def terminate(self, new_status: common.Status):        
         self.logger.debug("Terminate BN_DetectFlower")
         self.my_goal.cancel()
-'''

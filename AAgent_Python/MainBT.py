@@ -28,7 +28,7 @@ class GlobalBT:
         self.aagent.flowerDistance = 0
         self.aagent.astronautDirection = [0,0]
         self.aagent.astronautDistance = 0       
-        
+         
         # Create sub-trees
 
         # Avoid critters
@@ -43,12 +43,24 @@ class GlobalBT:
         eat.add_children([Is_Hungry(aagent), 
                           Is_Flower(aagent), 
                           BN_Turn(aagent, self.aagent.flowerDirection[0], self.aagent.flowerDirection[1]), 
-                          BN_Forward(aagent.flowerDistance), 
+                          BN_Forward(aagent, self.aagent.flowerDistance), 
                           Eating(aagent)])
  
-        # # Avoid obstacles
-        # obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
-        # obstacle.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
+        # Avoid obstacles
+        front = pt.composites.Sequence("Avoid front", memory=True)
+        front.add_children([Is_Obstacle(aagent, 5, 6), BN_Turn(aagent, 1)])
+
+        right = pt.composites.Sequence("Avoid right", memory=True)
+        right.add_children([Is_Obstacle(aagent, 6, 7), BN_Turn(aagent, -1)])
+
+        left = pt.composites.Sequence("Avoid left", memory=True)
+        left.add_children([Is_Obstacle(aagent, 4, 5), BN_Turn(aagent, 1)])
+
+        Avoid_Obs = pt.composites.Selector("Avoiding", memory=False)
+        Avoid_Obs.add_children([left, front, right])
+
+        obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
+        obstacle.add_children([Is_Obstacle(aagent, 4, 7), Avoid_Obs])
 
         # # Follow astronaut
         # follow = pt.composites.Sequence("Follow astronaut", memory=True)
@@ -65,7 +77,7 @@ class GlobalBT:
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
         #self.root.add_children([critter, eat, obstacle, follow, search, roam])
-        self.root.add_children([critter, eat, roam])
+        self.root.add_children([critter, eat, obstacle, roam])
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
     # Function to set invalid state for a node and its children recursively
