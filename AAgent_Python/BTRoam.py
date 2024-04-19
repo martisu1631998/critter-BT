@@ -142,7 +142,8 @@ class BTRoam:
         self.root = pt.composites.Sequence(name="Sequence", memory=True)
         self.root.add_children([Is_Hungry(aagent),
                                 Is_Flower(aagent),
-                                Approach_Flower(aagent)])
+                                TurnToFlower(aagent),
+                                GoToFlower(aagent)])
 
         # VERSION 2
         # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
