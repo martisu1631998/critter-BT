@@ -46,7 +46,7 @@ class BN_DoNothing(pt.behaviour.Behaviour):
 An action that makes the agent move forward
 '''
 class BN_Forward(pt.behaviour.Behaviour):
-    def __init__(self, aagent, dist):
+    def __init__(self, aagent, dist=-1):
         self.my_goal = None
         print("Initializing BN_Forward")
         super(BN_Forward, self).__init__("BN_Forward")
@@ -81,7 +81,7 @@ class BN_Forward(pt.behaviour.Behaviour):
 An action that makes the agent turn
 '''
 class BN_Turn(pt.behaviour.Behaviour):
-    def __init__(self, aagent, direction, degree):
+    def __init__(self, aagent, direction=None, degree=None):
         self.my_goal = None
         print("Initializing BN_Turn")
         super(BN_Turn, self).__init__("BN_Turn")
