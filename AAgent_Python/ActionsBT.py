@@ -61,15 +61,15 @@ class ManageObs(pt.behaviour.Behaviour):
         else:
             res = self.my_goal.result()
             if res:
-                print("BN_ManageObstacle completed with SUCCESS")
+                print("ManageObs completed with SUCCESS")
                 return pt.common.Status.SUCCESS
             else:
-                print("BN_ManageObstacle completed with FAILURE")
+                print("ManageObs completed with FAILURE")
                 return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
-        self.logger.debug("Terminate BN_ManageObstacle")
+        self.logger.debug("Terminate ManageObs")
         self.my_goal.cancel()
 
 
