@@ -158,7 +158,7 @@ class Is_Astronaut(pt.behaviour.Behaviour):
                     self.my_agent.i_state.astronautDirection = self.ray_degrees[index]
                     self.my_agent.i_state.astronautDistance = value['distance']
                     # print("Astronaut encountered!")
-                    self.my_agent.isFollowing = True
+                    self.my_agent.i_state.isFollowing = True
                     return pt.common.Status.SUCCESS
         return pt.common.Status.FAILURE
 
@@ -190,7 +190,7 @@ class TurnToAstronaut(pt.behaviour.Behaviour):
                 print("TurnToAstronaut completed with FAILURE")
                 return pt.common.Status.FAILURE
             
-    def terminate(self):
+    def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate TurnToAstronaut")
         self.my_goal.cancel()
@@ -206,7 +206,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
 
     def initialise(self):
         distance = self.my_agent.i_state.astronautDistance
-        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, distance, -1, 1).run())
+        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, distance, -1, 1).run())
 
     def update(self):
         if not self.my_goal.done():
@@ -220,7 +220,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
                 print("BN_ManageObstacle completed with FAILURE")
                 return pt.common.Status.FAILURE
             
-    def terminate(self):
+    def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate GoToAstronaut")
         self.my_goal.cancel()
@@ -237,7 +237,7 @@ class Test:
         critter.add_children([BN_DetectObstacle(aagent), BN_ManageObstacle(aagent)])
 
         # Astronaut
-        astronaut = pt.composites.Sequence(name="An astronaut", memory=False)
+        astronaut = pt.composites.Sequence(name="An astronaut", memory=True)
         astronaut.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
 
         # Roam around

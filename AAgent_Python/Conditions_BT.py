@@ -163,7 +163,7 @@ class Is_Obstacle(pt.behaviour.Behaviour):
     def terminate(self, new_status: common.Status):
         pass
 
-    
+
 '''
 Whether the agent has detected an astronaut or not
 '''
@@ -198,9 +198,8 @@ class Is_Astronaut(pt.behaviour.Behaviour):
                     self.my_agent.i_state.astronautDirection = self.ray_degrees[index]
                     self.my_agent.i_state.astronautDistance = value['distance']
                     print("Astronaut encountered!")
-                    self.my_agent.isFollowing = True
+                    self.my_agent.i_state.isFollowing = True
                     return pt.common.Status.SUCCESS
-
         return pt.common.Status.FAILURE
 
     def terminate(self, new_status: common.Status):
