@@ -6,6 +6,7 @@ import Sensors
 import time
 from Conditions import *
 from Compound_Actions import *
+from Base_Actions import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
@@ -131,9 +132,9 @@ class BTRoam:
         self.aagent.timecount = 0.0
         self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]
 
-        # VERSION 1
-        self.root = pt.composites.Sequence(name="Selector", memory=True)
-        self.root.add_children([BN_TurnRandom(aagent)])
+        # VERSION 1        
+        self.root = pt.composites.Sequence(name="Avoid critter", memory=True)
+        self.root.add_children([Is_Critter(aagent), BN_Turn(aagent, 1, 360), BN_Turn(aagent, 1, 45), BN_Forward(aagent)])
 
         # VERSION 2
         # self.root = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())

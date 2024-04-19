@@ -27,24 +27,24 @@ class GlobalBT:
         # Create sub-trees
 
         # Avoid critters
-        critter = pt.composites.Sequence(name="Avoid critter", memory=False)
-        critter.add_children([Is_Critter(aagent), Avoid_Critter(aagent)])
+        critter = pt.composites.Sequence(name="Avoid critter", memory=True)
+        critter.add_children([Is_Critter(aagent), BN_Turn(aagent, -1, 45), BN_Turn(aagent, 1, 90), BN_Forward(aagent)])
 
-        # Eat flowers
-        eat = pt.composites.Sequence("Eat", memory=False)
-        eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
+        # # Eat flowers
+        # eat = pt.composites.Sequence("Eat", memory=True)
+        # eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
  
         # Avoid obstacles
-        obstacle = pt.composites.Sequence("Avoid obstacles", memory=False)
-        follow.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
+        obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
+        obstacle.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
 
-        # Follow astronaut
-        follow = pt.composites.Sequence("Follow astronaut", memory=False)
-        follow.add_children([Is_Astronaut(aagent), Following(aagent)])
+        # # Follow astronaut
+        # follow = pt.composites.Sequence("Follow astronaut", memory=True)
+        # follow.add_children([Is_Astronaut(aagent), Following(aagent)])
 
-        # Search astronaut
-        search = pt.composites.Sequence("Search astronaut", memory=False)
-        search.add_children([Is_Following(aagent), Searching(aagent)])
+        # # Search astronaut
+        # search = pt.composites.Sequence("Search astronaut", memory=True)
+        # search.add_children([Is_Following(aagent), Searching(aagent)])
 
         # Roam around
         roam = pt.composites.Parallel("Roam aroud", policy=pt.common.ParallelPolicy.SuccessOnAll())
@@ -52,8 +52,8 @@ class GlobalBT:
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([critter(aagent), eat(aagent), obstacle(aagent), follow(aagent), search(aagent), roam(aagent)])
-
+        #self.root.add_children([critter, eat, obstacle, follow, search, roam])
+        self.root.add_children([critter, obstacle, roam])
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
     # Function to set invalid state for a node and its children recursively
@@ -79,5 +79,5 @@ class GlobalBT:
 
 
 
-xd = GlobalBT(aagent={})
+
 
