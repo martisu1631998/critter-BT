@@ -3,6 +3,7 @@ import random
 import time
 import py_trees as pt 
 from py_trees import common
+from BTRoam import *
 from Conditions_BT import *
 from ActionsBT import *
 from Goals_BT import *
@@ -35,13 +36,17 @@ class GlobalBT:
         follow = pt.composites.Sequence("Follow astronaut", memory=True)
         follow.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
 
-        # Search astronaut
-        search = pt.composites.Sequence("Search astronaut", memory=True)
-        search.add_children([Is_Following(aagent), Searching(aagent)])
+        # # Search astronaut
+        # search = pt.composites.Sequence("Search astronaut", memory=True)
+        # search.add_children([Is_Following(aagent), Searching(aagent)])
+
+        # Roam around
+        roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
+        roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([critter(aagent), eat(aagent), obstacle(aagent), follow(aagent), search(aagent), roam(aagent)])
+        self.root.add_children([eat(aagent), obstacle(aagent), follow(aagent), roaming(aagent)]) # search(aagent)
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 

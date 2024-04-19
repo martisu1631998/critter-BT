@@ -124,6 +124,106 @@ class BN_ManageObstacle(pt.behaviour.Behaviour):
         self.logger.debug("Terminate BN_ManageObstacle")
         self.my_goal.cancel()
 
+'''
+Whether the agent has detected an astronaut or not
+'''
+class Is_Astronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing Is_Astronaut")
+        super(Is_Astronaut, self).__init__("Is_Astronaut")
+        self.my_agent = aagent
+        self.ray_degrees = {
+            0: (-1, 90),
+            1: (-1, 72),
+            2: (-1, 54),
+            3: (-1, 36),
+            4: (-1, 18),
+            5: (1, 0),
+            6: (1, 18),
+            7: (1, 36),
+            8: (1, 54),
+            9: (1, 72),
+            10: (1, 90)
+        }
+
+    def initialise(self):
+        pass
+
+    def update(self):
+        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
+        for index, value in enumerate(sensor_obj_info):
+            if value:  # there is a hit with an object
+                if value["tag"] == "Astronaut":  # If it is the astronaut
+                    self.my_agent.i_state.astronautDirection = self.ray_degrees[index]
+                    self.my_agent.i_state.astronautDistance = value['distance']
+                    # print("Astronaut encountered!")
+                    self.my_agent.i_state.isFollowing = True
+                    return pt.common.Status.SUCCESS
+        return pt.common.Status.FAILURE
+
+    def terminate(self, new_status: common.Status):
+        pass
+
+
+class TurnToAstronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing TurnToAstronaut")
+        super(TurnToAstronaut, self).__init__("TurnToAstronaut")
+        self.logger.debug("TurnToAstronaut")
+        self.my_agent = aagent
+
+    def initialise(self):
+        direction = self.my_agent.i_state.astronautDirection
+        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, *direction).run())
+
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("TurnToAstronaut completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("TurnToAstronaut completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate TurnToAstronaut")
+        self.my_goal.cancel()
+
+
+class GoToAstronaut(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing GoToAstronaut")
+        super(GoToAstronaut, self).__init__("GoToAstronaut")
+        self.logger.debug("GoToAstronaut")
+        self.my_agent = aagent
+
+    def initialise(self):
+        distance = self.my_agent.i_state.astronautDistance
+        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, distance, -1, 1).run())
+
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("BN_ManageObstacle completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("BN_ManageObstacle completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate GoToAstronaut")
+        self.my_goal.cancel()
 
 
 class Test:
@@ -136,13 +236,17 @@ class Test:
         critter = pt.composites.Sequence(name="Avoid critter", memory=False)
         critter.add_children([BN_DetectObstacle(aagent), BN_ManageObstacle(aagent)])
 
+        # Astronaut
+        astronaut = pt.composites.Sequence(name="An astronaut", memory=True)
+        astronaut.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
+
         # Roam around
         roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
         roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
 
         # Root
         self.root = pt.composites.Selector(name="Selector", memory=False)
-        self.root.add_children([critter, roaming])
+        self.root.add_children([critter, astronaut, roaming])
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
@@ -159,3 +263,5 @@ class Test:
     async def tick(self):
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
+
+

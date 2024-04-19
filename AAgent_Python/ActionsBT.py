@@ -159,7 +159,7 @@ class TurnToAstronaut(pt.behaviour.Behaviour):
                 print("TurnToAstronaut completed with FAILURE")
                 return pt.common.Status.FAILURE
             
-    def terminate(self):
+    def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate TurnToAstronaut")
         self.my_goal.cancel()
@@ -175,7 +175,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
 
     def initialise(self):
         distance = self.my_agent.i_state.astronautDistance
-        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, distance, -1, 1).run())
+        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, distance, -1, 1).run())
 
     def update(self):
         if not self.my_goal.done():
@@ -189,7 +189,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
                 print("BN_ManageObstacle completed with FAILURE")
                 return pt.common.Status.FAILURE
             
-    def terminate(self):
+    def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
         self.logger.debug("Terminate GoToAstronaut")
         self.my_goal.cancel()
