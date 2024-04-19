@@ -30,7 +30,7 @@ class GlobalBT:
  
         # Avoid obstacles
         obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
-        follow.add_children([Is_Obstacle(aagent), ManageObs(aagent)])
+        obstacle.add_children([Is_Obstacle(aagent), ManageObs(aagent)])
 
         # Follow astronaut
         follow = pt.composites.Sequence("Follow astronaut", memory=True)

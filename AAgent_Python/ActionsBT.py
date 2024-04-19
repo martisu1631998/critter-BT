@@ -142,7 +142,7 @@ class Eating(pt.behaviour.Behaviour):
         self.my_goal = None
         print("Initializing eating...")
         self.my_agent = aagent
-        self.i_state = aagent.i_state
+        # self.i_state = aagent.i_state
         super(Eating, self).__init__("Eating")
         self.logger.debug("Eating")
         self.my_goal = None
@@ -168,7 +168,7 @@ class Eating(pt.behaviour.Behaviour):
                 time.sleep(1)
                 print("Eating completed with SUCCESS")
                 print("Not hungry anymore :)")
-                self.my_agent.isHungry = False
+                self.my_agent.i_state.isHungry = False
                 return pt.common.Status.SUCCESS
             else:
                 print("Eating completed with FAILURE")
