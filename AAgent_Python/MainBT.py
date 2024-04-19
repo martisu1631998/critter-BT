@@ -7,6 +7,7 @@ from Conditions import *
 import Goals_BT
 import Sensors
 from Base_Actions import *
+from Compound_Actions import *
 
 
 '''
@@ -22,21 +23,32 @@ class GlobalBT:
         self.aagent.isFollowing = False
         self.aagent.isHungry = False
         self.aagent.timecount = 0.0
-        self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]           
+        self.aagent.obstacleInfo = [0,0,0] #[Obstacle_left, Obstacle_front, Obstacle_right]    
+        self.aagent.flowerDirection = (0,0)
+        self.aagent.flowerDistance = 0
+        self.aagent.astronautDirection = [0,0]
+        self.aagent.astronautDistance = 0       
         
         # Create sub-trees
 
         # Avoid critters
         critter = pt.composites.Sequence(name="Avoid critter", memory=True)
-        critter.add_children([Is_Critter(aagent), BN_Turn(aagent, -1, 45), BN_Turn(aagent, 1, 90), BN_Forward(aagent)])
+        critter.add_children([Is_Critter(aagent), 
+                              BN_Turn(aagent, -1, 45), 
+                              BN_Turn(aagent, 1, 90), 
+                              BN_Forward(aagent)])
 
-        # # Eat flowers
-        # eat = pt.composites.Sequence("Eat", memory=True)
-        # eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), Eating(aagent)])
+        # Eat flowers
+        eat = pt.composites.Sequence("Eat", memory=True)
+        eat.add_children([Is_Hungry(aagent), 
+                          Is_Flower(aagent), 
+                          BN_Turn(aagent, aagent.flowerDirection[0], aagent.flowerDirection[1]), 
+                          BN_Forward(aagent.flowerDistance), 
+                          Eating(aagent)])
  
-        # Avoid obstacles
-        obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
-        obstacle.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
+        # # Avoid obstacles
+        # obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
+        # obstacle.add_children([Is_Obstacle(aagent), Avoid_Obs(aagent)])
 
         # # Follow astronaut
         # follow = pt.composites.Sequence("Follow astronaut", memory=True)
@@ -53,7 +65,7 @@ class GlobalBT:
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
         #self.root.add_children([critter, eat, obstacle, follow, search, roam])
-        self.root.add_children([critter, obstacle, roam])
+        self.root.add_children([critter, eat, roam])
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
     # Function to set invalid state for a node and its children recursively

@@ -11,6 +11,104 @@ They represent different actions that the agent can perform.
 '''
 
 
+'''
+Function so that the agent centers its body towards a detected flower, when it is hungry
+'''
+class TurnToFlower(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing turning to flower...")
+        self.my_agent = aagent
+        super(TurnToFlower, self).__init__("TurnToFlower")
+        self.logger.debug("TurnToFlower")
+        
+    
+    def initialise(self):
+        self.direction = self.my_agent.i_state.flowerDirection[0]
+        self.degree_rotation = self.my_agent.i_state.flowerDirection[1]        
+        self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree_rotation).run())
+        
+    def update(self):
+        if not self.my_goal.done():            
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("TurnToFlower completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("TurnToFlower completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate TurnToFlower")
+        self.my_goal.cancel()
+
+
+
+class GoToFlower(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing going to the flower...")
+        self.my_agent = aagent
+        super(GoToFlower, self).__init__("GoToFlower")
+        self.logger.debug("GoToFlower")
+    
+    def initialise(self):
+        self.distance = self.my_agent.i_state.flowerDistance
+        self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, self.distance, -1, 1).run())
+    
+    def update(self):
+        if not self.my_goal.done():
+            return pt.common.Status.RUNNING
+        else:
+            res = self.my_goal.result()
+            if res:
+                print("GoToFlower completed with SUCCESS")
+                return pt.common.Status.SUCCESS
+            else:
+                print("GoToFlower completed with FAILURE")
+                return pt.common.Status.FAILURE
+            
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate GoToFlower")
+        self.my_goal.cancel()
+
+class Eating(pt.behaviour.Behaviour):
+    def __init__(self, aagent):
+        self.my_goal = None
+        print("Initializing eating...")
+        self.my_agent = aagent
+        self.i_state = aagent.i_state
+        super(Eating, self).__init__("Eating")
+        self.logger.debug("Eating")
+        self.my_goal = None
+        
+    def initialise(self):
+        pass
+    
+    def update(self):        
+        print("1...")
+        time.sleep(1)
+        print("2...")
+        time.sleep(1)
+        print("3...")
+        time.sleep(1)
+        print("4...")
+        time.sleep(1)
+        print("5...")
+        time.sleep(1)
+        print("Eating completed with SUCCESS")
+        print("Not hungry anymore :)")
+        self.my_agent.isHungry = False
+        return pt.common.Status.SUCCESS
+
+    def terminate(self, new_status: common.Status):
+        # Finishing the behaviour, therefore we have to stop the associated task
+        self.logger.debug("Terminate Eating")
+        self.my_goal.cancel()
 
 
 

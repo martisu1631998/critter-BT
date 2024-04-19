@@ -51,8 +51,7 @@ class Is_Hungry(pt.behaviour.Behaviour):
         pass
 
     def update(self):
-        if self.my_agent.isHungry:
-          print("I am hungry!")
+        if self.my_agent.isHungry:          
           return pt.common.Status.SUCCESS
 
         return pt.common.Status.FAILURE
@@ -70,6 +69,19 @@ class Is_Flower(pt.behaviour.Behaviour):
         print("Initializing Is_Flower")
         super(Is_Flower, self).__init__("Is_Flower")
         self.my_agent = aagent
+        self.ray_degrees = {
+            0: (-1, 90),
+            1: (-1, 72),
+            2: (-1, 54),
+            3: (-1, 36),
+            4: (-1, 18),
+            5: (1, 0),
+            6: (1, 18),
+            7: (1, 36),
+            8: (1, 54),
+            9: (1, 72),
+            10: (1, 90)
+        }
 
     def initialise(self):
         pass
@@ -79,6 +91,8 @@ class Is_Flower(pt.behaviour.Behaviour):
         for index, value in enumerate(sensor_obj_info):
             if value:  # there is a hit with an object
                 if value["tag"] == "Flower":  # If there is a flower
+                    self.my_agent.flowerDirection = self.ray_degrees[index]
+                    self.my_agent.flowerDistance = value['distance']
                     print("Flower found!")
                     self.my_agent.isFollowing = False
                     return pt.common.Status.SUCCESS
