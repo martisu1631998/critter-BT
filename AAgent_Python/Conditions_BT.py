@@ -1,5 +1,6 @@
 import py_trees as pt  # type: ignore
 from py_trees import common # type: ignore
+import time
 import Sensors
 
 '''
@@ -51,9 +52,16 @@ class Is_Hungry(pt.behaviour.Behaviour):
         pass
 
     def update(self):
-        if self.my_agent.isHungry:
-          print("I am hungry!")
-          return pt.common.Status.SUCCESS
+        # Control the time passed until the agent is hungry
+        self.my_agent.i_state.timecount = time.time() - self.my_agent.i_state.initTime
+        if self.my_agent.i_state.timecount < 15:
+            self.my_agent.i_state.isHungry = False
+        else:
+            self.my_agent.i_state.isHungry = True
+        
+        if self.my_agent.i_state.isHungry:
+            # print("I am hungry!")
+            return pt.common.Status.SUCCESS
 
         return pt.common.Status.FAILURE
 

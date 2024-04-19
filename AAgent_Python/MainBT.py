@@ -20,7 +20,7 @@ class GlobalBT:
     def __init__(self, aagent):
         # Initialize agent atributes
         self.aagent = aagent
-        self.initTime = time.time()               
+        self.aagent.i_state.initTime = time.time()               
         
         # Create sub-trees
 
@@ -61,13 +61,6 @@ class GlobalBT:
         self.set_invalid_state(self.root)
 
     async def tick(self):
-        # Control the time passed until the agent is hungry
-        self.aagent.timecount = time.time() - self.initTime
-        if self.aagent.timecount < 15:
-            self.aagent.isHungry = False
-        else:
-            self.aagent.isHungry = True
-
         self.behaviour_tree.tick()
         await asyncio.sleep(0)
 

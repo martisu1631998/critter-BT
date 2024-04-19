@@ -90,7 +90,7 @@ class TurnToFlower(pt.behaviour.Behaviour):
         
     def update(self):
         if not self.my_goal.done():
-            print("Still running...")
+            # print("Still running...")
             return pt.common.Status.RUNNING
         else:
             res = self.my_goal.result()
@@ -169,6 +169,8 @@ class Eating(pt.behaviour.Behaviour):
                 print("Eating completed with SUCCESS")
                 print("Not hungry anymore :)")
                 self.my_agent.i_state.isHungry = False
+                self.my_agent.i_state.initTime = 0.0
+                self.my_agent.i_state.timecount = 0.0
                 return pt.common.Status.SUCCESS
             else:
                 print("Eating completed with FAILURE")

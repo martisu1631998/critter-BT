@@ -59,7 +59,7 @@ class ForwardDist:
                         self.target_dist = random.randint(self.d_min, self.d_max)
                     else:
                         self.target_dist = self.original_dist
-                        print("Distance to the object:", self.target_dist)
+                        # print("Distance to the object:", self.target_dist)
                     # Start moving
                     await self.a_agent.send_message("action", "mf")
                     self.state = self.MOVING
@@ -68,7 +68,7 @@ class ForwardDist:
                 elif self.state == self.MOVING:
                     # If we are moving, check if we already have covered the required distance
                     current_dist = calculate_distance(self.starting_pos, self.i_state.position)
-                    print("Current distance:", current_dist)
+                    # print("Current distance:", current_dist)
                     if current_dist >= self.target_dist:
                         await self.a_agent.send_message("action", "stop")
                         self.state = self.STOPPED
