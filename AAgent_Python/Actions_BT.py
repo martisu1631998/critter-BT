@@ -9,6 +9,7 @@ All the main behaviour tree's action leaves.
 They represent the different activities, more or less complex, that the agent can perform.
 '''
 
+# Borrar?
 # class ManageObs(pt.behaviour.Behaviour):
 #     """
 #     Manage Obstacle:
