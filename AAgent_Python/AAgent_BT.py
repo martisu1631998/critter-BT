@@ -1,13 +1,16 @@
 import sys
-import aiohttp # type: ignore
+import aiohttp 
 import asyncio
 import json
 import Sensors
 import Goals_BT
-import BTRoam
-import BTCritter
-import MainBT
+import Main_BT
 
+'''
+Code that models the agents of the environment (critter and astronaut). 
+Here the goals and behaviour trees that will be passed to the agents must be specified.
+We have added eight additonal internal variables to keep track of the state of our agent while executing the behaviour tree.
+'''
 
 class InternalState:
     """
@@ -18,7 +21,12 @@ class InternalState:
             movingForwards: <bool>
             movingBackwards: <bool>
             isHungry: <bool>
+            initTime: <float> Timer to compute when the agent is hungry
             speed: <float> Speed of the agent
+            flowerDirection: <int> -1 for left and 1 for right
+            astronautDirection: <int> -1 for left and 1 for right
+            flowerDistance: <int> 
+            astronautDistance: <int>
             position: <dict { "x": <float>, "y": <float>, "z": <float> } Position using world coordinates
             rotation: <dict { "x": <float>, "y": <float>, "z": <float> } Rotation y - Yaw, x - Pitch, z - Roll
     """
@@ -26,17 +34,14 @@ class InternalState:
         self.isRotatingRight = False
         self.isRotatingLeft = False
         self.movingForwards = False
-        self.movingBackwards = False
-        self.isHungry = True
+        self.movingBackwards = False        
         self.speed = 0.0
         self.position = {"x": 0, "y": 0, "z": 0}
         self.rotation = {"x": 0, "y": 0, "z": 0}
         # Our variables
-        self.isHungry = False
-        self.isFollowing = False
-        self.initTime = 0.0
-        # self.timecount = 0.0
-        self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
+        self.isHungry = False        
+        self.initTime = 0.0        
+        #self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
         self.flowerDirection = 0
         self.flowerDistance = 0
         self.astronautDirection = 0
@@ -96,11 +101,8 @@ class AAgent:
         self.currentGoal = None
 
         # Reference to the possible behaviour trees the agent ca execute
-        self.bts = {
-            "BTRoam": BTRoam.BTRoam(self),
-            "TestBT": BTCritter.Test(self),
-            "MainBT": MainBT.GlobalBT(self)
-            # "BTRoamAdvanced": BTCritter.BTRoamAdvanced(self)
+        self.bts = {            
+            "MainBT": Main_BT.GlobalBT(self)            
         }
 
         # Active behaviour tree

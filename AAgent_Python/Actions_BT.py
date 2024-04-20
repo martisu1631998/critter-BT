@@ -1,12 +1,7 @@
 import asyncio
-import random
-import py_trees # type: ignore
-import py_trees as pt # type: ignore
-from py_trees import common # type: ignore
-import Goals_BT
-import Sensors
 import time
-import asyncio
+import py_trees as pt 
+from py_trees import common 
 from Goals_BT import *
 from Base_Actions import *
 

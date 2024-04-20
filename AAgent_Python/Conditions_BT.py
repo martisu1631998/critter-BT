@@ -5,7 +5,7 @@ import Sensors
 
 '''
 All the main behaviour tree's conditional leaves. 
-They check possible conditions that trigger different behaviours of the agent.
+They check possible conditions that trigger the different behaviours of the agent.
 '''
 
 

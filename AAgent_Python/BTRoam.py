@@ -7,7 +7,7 @@ import Goals_BT
 import Sensors
 import time
 from Conditions_BT import *
-from ActionsBT import *
+from AAgent_Python.Actions_BT import *
  
 class BN_DoNothing(pt.behaviour.Behaviour):
     def __init__(self, aagent):
