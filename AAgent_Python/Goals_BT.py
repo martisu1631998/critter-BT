@@ -1,10 +1,14 @@
 import math
 import random
 import asyncio
-import Sensors
-from collections import Counter
 
- 
+'''
+Atomic actions. Define the movements within the environment through asyncio
+'''
+
+
+
+# Function to compute distance between two points
 def calculate_distance(point_a, point_b):
     distance = math.sqrt((point_b['x'] - point_a['x']) ** 2 +
                          (point_b['y'] - point_a['y']) ** 2 +
@@ -12,10 +16,10 @@ def calculate_distance(point_a, point_b):
     return distance
 
 
+'''
+Does nothing
+'''
 class DoNothing:
-    """
-    Does nothing
-    """
     def __init__(self, a_agent):
         self.a_agent = a_agent
         self.rc_sensor = a_agent.rc_sensor
@@ -27,12 +31,12 @@ class DoNothing:
         return True
 
 
+"""
+Moves forward a certain distance specified in the parameter "dist".
+If "dist" is -1, selects a random distance between the initial
+parameters of the class "d_min" and "d_max"
+"""
 class ForwardDist:
-    """
-        Moves forward a certain distance specified in the parameter "dist".
-        If "dist" is -1, selects a random distance between the initial
-        parameters of the class "d_min" and "d_max"
-    """
     STOPPED = 0
     MOVING = 1
     END = 2
@@ -84,12 +88,12 @@ class ForwardDist:
             self.state = self.STOPPED
 
 
+"""
+Turns right or left the specified amount of degrees. If none are specified:
+Repeats the action of turning a random number of degrees in a random
+direction (right or left)
+"""
 class Turn:
-    """
-    Turns right or left the specified amount of degrees. If none are specified:
-    Repeats the action of turning a random number of degrees in a random
-    direction (right or left)
-    """
     LEFT = -1
     RIGHT = 1
 
@@ -154,5 +158,3 @@ class Turn:
         except asyncio.CancelledError:
             print("***** TASK Turn CANCELLED")
             await self.a_agent.send_message("action", "nt")
-
-
