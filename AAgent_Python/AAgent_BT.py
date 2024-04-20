@@ -4,7 +4,7 @@ import asyncio
 import json
 import Sensors
 import Goals_BT
-import Main_BT
+import BTCritter
 
 '''
 Code that models the agents of the environment (critter and astronaut). 
@@ -102,7 +102,7 @@ class AAgent:
 
         # Reference to the possible behaviour trees the agent ca execute
         self.bts = {            
-            "MainBT": Main_BT.GlobalBT(self)            
+            "MainBT": BTCritter.GlobalBT(self)            
         }
 
         # Active behaviour tree
