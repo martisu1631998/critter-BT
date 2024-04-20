@@ -1,8 +1,8 @@
 import asyncio
 import random
 import time
-import py_trees as pt  # type: ignore
-from py_trees import common # type: ignore
+import py_trees as pt  
+from py_trees import common
 from BTRoam import *
 from Conditions_BT import *
 from ActionsBT import *
@@ -14,7 +14,7 @@ from ActionsBT import *
 '''
 Main behaviour tree that models the movements of our agent, the critter.
 It consists of a selector with multiple options based on the observations that the agent makes of its environment.
-It can avoid obstacles encountered, avoid critters encountered, eat flowers, follow or search the astronaut and roam around.
+It can avoid obstacles encountered, avoid critters encountered, eat flowers, follow the astronaut and roam around.
 '''
 class GlobalBT:
     def __init__(self, aagent):
