@@ -136,14 +136,19 @@ class Is_Obstacle(pt.behaviour.Behaviour):
 
     def terminate(self, new_status: common.Status):
         pass
-    
+
+
+'''
+Alternative implementation of avoid obstacles that is more precise, but also more complex and of which we are not
+completely sure that is as reliable as the simpler implementation
+'''
 # class Is_Obstacle(pt.behaviour.Behaviour):
 #     def __init__(self, aagent):
 #         self.my_goal = None
 #         print("Initializing Is_Obstacle")
 #         super(Is_Obstacle, self).__init__("Is_Obstacle")
 #         self.my_agent = aagent
-#         self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine"]
+#         self.always_avoid = ["Rock", "Wall", "Machine", "Flower", "Untagged"]
 #         self.hits = [0,0,0]
 
 #     def initialise(self):
@@ -175,17 +180,12 @@ class Is_Obstacle(pt.behaviour.Behaviour):
 #                     print("Is_Obstacle completed with SUCCESS")
 #                     # From i in [4,5,6] to i in [0,1,2]
 #                     self.hits[i-4] = 1
-#                     detected = True
-#                     if sensor_obj_info[i]["tag"] == "AAgentCritterMantaRay":
-#                         print("AAAAH! A critter!")                    
-#                 elif (sensor_obj_info[i]["tag"] == "Flower") and (not self.my_agent.i_state.isHungry):
-#                     print("Is_Obstacle completed with SUCCESS")
-#                     # From i in [4,5,6] to i in [0,1,2]
-#                     self.hits[i-4] = 1
-#                     detected = True
+#                     detected = True                                 
+                
 #         if detected:
 #             self.updateObstacleInfo()
 #             return pt.common.Status.SUCCESS
+        
 #         self.my_agent.i_state.obstacleInfo = [0,0,0]
 #         return pt.common.Status.FAILURE
 
@@ -233,33 +233,3 @@ class Is_Astronaut(pt.behaviour.Behaviour):
 
     def terminate(self, new_status: common.Status):
         pass
-
-
-
-# Borrar?
-    """
-    Old version of IsObstacle:
-
-    class Is_Obstacle(pt.behaviour.Behaviour):
-    def __init__(self, aagent):
-        self.my_goal = None
-        print("Initializing Is_Obstacle")
-        super(Is_Obstacle, self).__init__("Is_Obstacle")
-        self.my_agent = aagent
-
-    def initialise(self):
-        pass
-
-    def update(self):
-        sensor_obj_info = self.my_agent.rc_sensor.sensor_rays[Sensors.RayCastSensor.OBJECT_INFO]
-        for index, value in enumerate(sensor_obj_info):
-            if value:  # there is a hit with an object
-                if (value["tag"] == "Rock") or (value["tag"] == "Wall") or (value["tag"] == "Machine") or (value["tag"] == "Flower"): # If there is an obstacle
-                    print("There is an obstacle!")                    
-                    return pt.common.Status.SUCCESS
-
-        return pt.common.Status.FAILURE
-
-    def terminate(self, new_status: common.Status):
-        pass
-    """

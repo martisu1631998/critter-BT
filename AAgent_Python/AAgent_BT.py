@@ -29,6 +29,7 @@ class InternalState:
             astronautDistance: <int>
             position: <dict { "x": <float>, "y": <float>, "z": <float> } Position using world coordinates
             rotation: <dict { "x": <float>, "y": <float>, "z": <float> } Rotation y - Yaw, x - Pitch, z - Roll
+            obstacleInfo <list> [<int>,<int>,<int>] [Obstacle_left, Obstacle_front, Obstacle_right]
     """
     def __init__(self):
         self.isRotatingRight = False
@@ -41,11 +42,11 @@ class InternalState:
         # Our variables
         self.isHungry = False        
         self.initTime = 0.0        
-        #self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
         self.flowerDirection = (0,0)
         self.flowerDistance = 0
         self.astronautDirection = (0,0)
         self.astronautDistance = 0
+        self.obstacleInfo = [0,0,0]  # Only used if the alternative avoid obstacles function is activated
 
 
     def set_internal_state(self, i_state_dict):

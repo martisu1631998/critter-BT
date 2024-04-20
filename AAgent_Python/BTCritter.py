@@ -27,6 +27,10 @@ class GlobalBT:
         # Eat flowers
         eat = pt.composites.Sequence("Eat flowers", memory=True)
         eat.add_children([Is_Hungry(aagent), Is_Flower(aagent), TurnToFlower(aagent), GoToFlower(aagent), Eating(aagent)])
+
+        # Follow astronaut
+        follow = pt.composites.Sequence("Follow astronaut", memory=True)
+        follow.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
  
         # Avoid obstacles
         front = pt.composites.Sequence("Avoid front", memory=True)
@@ -42,11 +46,7 @@ class GlobalBT:
         Avoid_Obs.add_children([left, front, right])
 
         obstacle = pt.composites.Sequence("Avoid obstacles", memory=True)
-        obstacle.add_children([Is_Obstacle(aagent, 4, 7), Avoid_Obs])
-
-        # Follow astronaut
-        follow = pt.composites.Sequence("Follow astronaut", memory=True)
-        follow.add_children([Is_Astronaut(aagent), TurnToAstronaut(aagent), GoToAstronaut(aagent)])
+        obstacle.add_children([Is_Obstacle(aagent, 4, 7), Avoid_Obs])        
 
         # Roam around
         roaming = pt.composites.Parallel("Roam around", policy=pt.common.ParallelPolicy.SuccessOnAll())
@@ -54,7 +54,7 @@ class GlobalBT:
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Main", memory=False)
-        self.root.add_children([critter, eat, obstacle, follow, roaming])
+        self.root.add_children([critter, eat, follow, obstacle, roaming])
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
 
     # Function to set invalid state for a node and its children recursively
