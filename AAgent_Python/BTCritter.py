@@ -20,7 +20,7 @@ class GlobalBT:
         # Avoid critters
         critter = pt.composites.Sequence(name="Avoid critters", memory=True)
         critter.add_children([Is_Critter(aagent), 
-                              BN_Turn(aagent, -1, 45), 
+                              BN_Turn(aagent, -1, 360), 
                               BN_Turn(aagent, 1, 90), 
                               BN_Forward(aagent)])
 
