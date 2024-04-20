@@ -3,7 +3,6 @@ import random
 import time
 import py_trees as pt  
 from py_trees import common
-from BTRoam import *
 from Conditions_BT import *
 from AAgent_Python.Actions_BT import *
 from Goals_BT import *
@@ -61,8 +60,8 @@ class GlobalBT:
         # search.add_children([Is_Following(aagent), Searching(aagent)])
 
         # Roam around
-        roaming = pt.composites.Parallel("Parallel", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
-        roaming.add_children([BN_ForwardRandom(aagent), BN_TurnRandom(aagent)])
+        roaming = pt.composites.Parallel("Parallel", policy=pt.common.ParallelPolicy.SuccessOnAll())
+        roaming.add_children([BN_Forward(aagent), BN_Turn(aagent)])
 
         # Tree root selector
         self.root = pt.composites.Selector(name="Selector", memory=False)
