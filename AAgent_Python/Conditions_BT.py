@@ -122,7 +122,7 @@ class Is_Obstacle(pt.behaviour.Behaviour):
         print("Initializing Is_Obstacle")
         super(Is_Obstacle, self).__init__("Is_Obstacle")
         self.my_agent = aagent
-        self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine"]
+        self.always_avoid = ["AAgentCritterMantaRay", "Rock", "Wall", "Machine", "Untagged"]
         self.hits = [0,0,0]
 
     def initialise(self):

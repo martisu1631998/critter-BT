@@ -22,6 +22,9 @@ class GlobalBT:
         self.aagent = aagent
         self.aagent.i_state.initTime = time.time()               
         
+    #    '''
+    #    Version 1:
+
         # Create sub-trees
 
         # Eat flowers
@@ -49,6 +52,7 @@ class GlobalBT:
         self.root.add_children([eat, obstacle, follow, roaming]) # search(aagent)
 
         self.behaviour_tree = pt.trees.BehaviourTree(self.root)
+#        '''
 
     # Function to set invalid state for a node and its children recursively
     def set_invalid_state(self, node):
