@@ -1,7 +1,7 @@
 import asyncio
 import py_trees as pt
 from py_trees import common
-import Goals_BT
+from Goals_BT import *
 import Sensors
 import time
 from Conditions_BT import *
@@ -24,7 +24,7 @@ class BN_DoNothing(pt.behaviour.Behaviour):
         super(BN_DoNothing, self).__init__("BN_DoNothing")
 
     def initialise(self):
-        self.my_goal = asyncio.create_task(Goals_BT.DoNothing(self.my_agent).run())
+        self.my_goal = asyncio.create_task(DoNothing(self.my_agent).run())
 
     def update(self):
         if not self.my_goal.done():
@@ -47,16 +47,16 @@ An action that makes the agent move forward
 '''
 class BN_Forward(pt.behaviour.Behaviour):
     def __init__(self, aagent, dist=-1):
-        self.my_goal = None
-        print("Initializing BN_Forward")
-        super(BN_Forward, self).__init__("BN_Forward")
-        self.logger.debug("Initializing BN_Forward")
         self.my_agent = aagent
         self.dist = dist
+        self.my_goal = None        
+        print("Initializing BN_Forward")
+        super(BN_Forward, self).__init__("BN_Forward")
+        self.logger.debug("Initializing BN_Forward")        
 
     def initialise(self):
-        self.logger.debug("Create Goals_BT.ForwardDist task")
-        self.my_goal = asyncio.create_task(Goals_BT.ForwardDist(self.my_agent, self.dist, 1, 5).run())
+        self.logger.debug("Create ForwardDist task")
+        self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, self.dist, 1, 5).run())
 
     def update(self):
         if not self.my_goal.done():
@@ -82,15 +82,15 @@ An action that makes the agent turn
 '''
 class BN_Turn(pt.behaviour.Behaviour):
     def __init__(self, aagent, direction=None, degree=None):
-        self.my_goal = None
-        print("Initializing BN_Turn")
-        super(BN_Turn, self).__init__("BN_Turn")
         self.my_agent = aagent
         self.direction = direction
         self.degree = degree
+        self.my_goal = None
+        print("Initializing BN_Turn")
+        super(BN_Turn, self).__init__("BN_Turn")
 
     def initialise(self):
-        self.my_goal = asyncio.create_task(Goals_BT.Turn(self.my_agent, self.direction, self.degree).run())
+        self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree).run())
 
     def update(self):              
         if not self.my_goal.done():
@@ -107,7 +107,7 @@ class BN_Turn(pt.behaviour.Behaviour):
 
     def terminate(self, new_status: common.Status):
         # Finishing the behaviour, therefore we have to stop the associated task
-        self.logger.debug("Terminate BN_TurnRandom")
+        self.logger.debug("Terminate BN_Turn")
         self.my_goal.cancel()
 
 
