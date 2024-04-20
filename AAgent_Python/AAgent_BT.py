@@ -23,8 +23,8 @@ class InternalState:
             isHungry: <bool>
             initTime: <float> Timer to compute when the agent is hungry
             speed: <float> Speed of the agent
-            flowerDirection: <int> -1 for left and 1 for right
-            astronautDirection: <int> -1 for left and 1 for right
+            flowerDirection: <tuple> (<int>, <int>) direction and degrees
+            astronautDirection: <tuple> (<int>, <int>) direction and degrees
             flowerDistance: <int> 
             astronautDistance: <int>
             position: <dict { "x": <float>, "y": <float>, "z": <float> } Position using world coordinates
@@ -42,9 +42,9 @@ class InternalState:
         self.isHungry = False        
         self.initTime = 0.0        
         #self.obstacleInfo = [0,0,0] # [Obstacle_left, Obstacle_front, Obstacle_right]
-        self.flowerDirection = 0
+        self.flowerDirection = (0,0)
         self.flowerDistance = 0
-        self.astronautDirection = 0
+        self.astronautDirection = (0,0)
         self.astronautDistance = 0
 
 

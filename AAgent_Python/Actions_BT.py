@@ -191,13 +191,15 @@ class TurnToAstronaut(pt.behaviour.Behaviour):
         self.my_agent = aagent
         self.my_goal = None
         self.direction = None
+        self.degree_rotation = None
         print("Initializing TurnToAstronaut")
         super(TurnToAstronaut, self).__init__("TurnToAstronaut")
         self.logger.debug("TurnToAstronaut")        
-                    # Different than the other turn?
+                    
     def initialise(self):
-        self.direction = self.my_agent.i_state.astronautDirection
-        self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction).run())
+        self.direction = self.my_agent.i_state.astronautDirection[0]
+        self.degree_rotation = self.my_agent.i_state.astronautDirection[1]
+        self.my_goal = asyncio.create_task(Turn(self.my_agent, self.direction, self.degree_rotation).run())
 
     def update(self):
         if not self.my_goal.done():
@@ -232,7 +234,7 @@ class GoToAstronaut(pt.behaviour.Behaviour):
 
     def initialise(self):
         self.distance = self.my_agent.i_state.astronautDistance
-        self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, self.distance, -1, 1).run())
+        self.my_goal = asyncio.create_task(ForwardDist(self.my_agent, int(self.distance), -1, 1).run()) # Arrodonit
 
     def update(self):
         if not self.my_goal.done():
